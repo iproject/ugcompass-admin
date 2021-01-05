@@ -9,5 +9,9 @@ export const login = (formValues) => async (dispatch) => {
     payload: data.token,
   });
 
+  localStorage.setItem('ugcompass_token', 'Bearer' + data.token);
+
+  // Todo: Log user to dashboard on login with custom history object
+
   // Todo: Handle errors
 };
