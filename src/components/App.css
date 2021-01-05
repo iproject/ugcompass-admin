@@ -10,6 +10,9 @@ body {
   margin: 0px;
   background: #6ac7cd;
 }
+button:hover {
+  cursor: pointer;
+}
 .msg {
   width: 100%;
   margin: 5px auto;
@@ -196,6 +199,13 @@ label {
   font-family: 'lora', 'serif';
   margin-top: 10px;
 }
+/* User */
+.admin-btn .user-role {
+  font-size: 0.85rem;
+  color: #444;
+  text-transform: capitalize;
+}
+
 .add-btn {
   background: #1e64ce;
   padding: 0.7rem 1.3rem;
@@ -211,16 +221,42 @@ label {
   background: #0446aa;
   color: #fff;
 }
-.admin-btn:hover {
-  background: #1e64ce;
-  color: #fff;
+.main-section .admin-btn {
+  color: #000000;
+  display: flex !important;
+  align-items: center;
+  justify-content: space-between;
+}
+.main-section .admin-btn i {
+  margin-left: 1rem;
+}
+.main-section .admin-btn i.fa-edit {
+  color: orange;
+}
+.main-section .admin-btn i.fa-trash-alt {
+  color: red;
 }
 .admin-content .add-btn .btn {
   float: right;
 }
+.admin-content .top-section {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+.admin-content .top-section .search {
+  flex: 1;
+  margin-right: 1rem;
+}
+.admin-content .top-section input {
+  width: 100%;
+}
 .admin-content .add-content .text-input {
   margin-top: 10px;
   width: 90%;
+}
+.main-section > * {
+  width: 100%;
 }
 .search-input {
   padding: 0.5rem 1rem;

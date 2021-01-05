@@ -1,20 +1,19 @@
 import React, { Fragment, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
 import Sidebar from '../layout/LeftSidebar';
 import Navbar from '../layout/MainNavbar';
-import { connect } from 'react-redux';
-import { fetchRooms } from '../../actions/rooms';
+import { fetchFacilities } from '../../actions/facilities';
 
-const Rooms = ({ fetchRooms, rooms }) => {
+const Facilities = ({ fetchFacilities, facilities }) => {
   useEffect(() => {
-    fetchRooms();
+    fetchFacilities();
     // eslint-disable-next-line
   }, []);
 
   return (
     <Fragment>
       <Navbar />
-
       <div className='admin-wrapper'>
         <Sidebar />
 
@@ -31,24 +30,24 @@ const Rooms = ({ fetchRooms, rooms }) => {
               </form>
             </div>
             &nbsp;
-            <Link to='/rooms/new' className='btn'>
-              Add Room
-            </Link>
+            <button className='btn'>
+              <Link to='/facilities/new'>Add Facility</Link>
+            </button>
           </div>
           <br />
           <div className='main-section'>
-            {rooms &&
-              rooms.map((room) => (
-                <div key={room._id} className='admin-btn'>
+            {facilities &&
+              facilities.map((facility) => (
+                <div key={facility._id} className='admin-btn'>
                   <p>
-                    {room.name} |{' '}
-                    <span className='user-role'>{room.category}</span>
+                    {facility.name} |{' '}
+                    <span className='user-role'>{facility.category}</span>
                   </p>
                   <div className='controls'>
-                    <Link to='/rooms/edit'>
+                    <Link to='/facilities/edit'>
                       <i className='fas fa-edit'></i>
                     </Link>
-                    <Link to='/rooms/delete'>
+                    <Link to='/facilities/delete'>
                       <i className='fas fa-trash-alt'></i>
                     </Link>
                   </div>
@@ -63,8 +62,8 @@ const Rooms = ({ fetchRooms, rooms }) => {
 
 const mapStateToProps = (state) => {
   return {
-    rooms: state.rooms.rooms,
+    facilities: state.facilities.facilities,
   };
 };
 
-export default connect(mapStateToProps, { fetchRooms })(Rooms);
+export default connect(mapStateToProps, { fetchFacilities })(Facilities);

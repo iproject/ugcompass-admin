@@ -10,7 +10,7 @@ export const login = (formValues) => async (dispatch) => {
     payload: data.token,
   });
 
-  localStorage.setItem('ugcompass_token', 'Bearer' + data.token);
+  localStorage.setItem('ugcompass_token', 'Bearer ' + data.token);
   // > Go to the main dashboard
   history.push('/');
 

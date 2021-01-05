@@ -1,23 +1,22 @@
 import React, { Fragment, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
+
 import Sidebar from '../layout/LeftSidebar';
 import Navbar from '../layout/MainNavbar';
-import { connect } from 'react-redux';
-import { fetchRooms } from '../../actions/rooms';
+import { fetchUsers } from '../../actions/users';
 
-const Rooms = ({ fetchRooms, rooms }) => {
+const Publishers = ({ fetchUsers, users }) => {
   useEffect(() => {
-    fetchRooms();
+    fetchUsers();
     // eslint-disable-next-line
   }, []);
 
   return (
     <Fragment>
       <Navbar />
-
       <div className='admin-wrapper'>
         <Sidebar />
-
         <div className='admin-content'>
           <div className='top-section'>
             <div className='search section'>
@@ -31,24 +30,23 @@ const Rooms = ({ fetchRooms, rooms }) => {
               </form>
             </div>
             &nbsp;
-            <Link to='/rooms/new' className='btn'>
-              Add Room
-            </Link>
+            <button className='btn'>
+              <Link to='/users/new'>Add User</Link>
+            </button>
           </div>
           <br />
           <div className='main-section'>
-            {rooms &&
-              rooms.map((room) => (
-                <div key={room._id} className='admin-btn'>
+            {users &&
+              users.map((user) => (
+                <div key={user._id} className='admin-btn'>
                   <p>
-                    {room.name} |{' '}
-                    <span className='user-role'>{room.category}</span>
+                    {user.name} | <span className='user-role'>{user.role}</span>
                   </p>
                   <div className='controls'>
-                    <Link to='/rooms/edit'>
+                    <Link to='/users/edit'>
                       <i className='fas fa-edit'></i>
                     </Link>
-                    <Link to='/rooms/delete'>
+                    <Link to='/users/delete'>
                       <i className='fas fa-trash-alt'></i>
                     </Link>
                   </div>
@@ -63,8 +61,8 @@ const Rooms = ({ fetchRooms, rooms }) => {
 
 const mapStateToProps = (state) => {
   return {
-    rooms: state.rooms.rooms,
+    users: state.users.users,
   };
 };
 
-export default connect(mapStateToProps, { fetchRooms })(Rooms);
+export default connect(mapStateToProps, { fetchUsers })(Publishers);
