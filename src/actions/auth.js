@@ -1,5 +1,6 @@
 import ugCompass from '../apis/ugCompass';
 import { LOGIN_SUCCESS } from './types';
+import history from '../utils/history';
 
 export const login = (formValues) => async (dispatch) => {
   const { data } = await ugCompass.post('/auth/login', formValues);
@@ -10,8 +11,8 @@ export const login = (formValues) => async (dispatch) => {
   });
 
   localStorage.setItem('ugcompass_token', 'Bearer' + data.token);
-
-  // Todo: Log user to dashboard on login with custom history object
+  // > Go to the main dashboard
+  history.push('/');
 
   // Todo: Handle errors
 };
