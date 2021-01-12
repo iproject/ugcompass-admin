@@ -1,13 +1,29 @@
 import React from 'react';
+import { connect } from 'react-redux';
+import { logout } from '../../actions/auth';
 
-const MainNavbar = () => {
+const MainNavbar = ({ currentUser, logout }) => {
   return (
-    <header>
+    <header className='main-header'>
       <a href='dashboard.html'>
-        <h1>UG COMPASS ADMIN</h1>
+        <h1 className='ui header'>UG COMPASS ADMIN</h1>
       </a>
+      <div>
+        <div className='text' style={{ marginRight: '1rem' }}>
+          <i className='user circle icon'></i>
+          <span>{currentUser.name}</span>
+        </div>
+        <button className='ui button small red' onClick={logout}>
+          Logout
+        </button>
+      </div>
     </header>
   );
 };
 
-export default MainNavbar;
+const mapStateToProps = (state) => ({
+  currentUser: state.auth.currentUser,
+});
+export default connect(mapStateToProps, {
+  logout,
+})(MainNavbar);

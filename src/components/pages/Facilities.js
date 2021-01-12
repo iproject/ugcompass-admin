@@ -1,15 +1,49 @@
-import React, { Fragment, useEffect } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
+import { TransitionGroup } from 'react-transition-group';
 import Sidebar from '../layout/LeftSidebar';
 import Navbar from '../layout/MainNavbar';
-import { fetchFacilities } from '../../actions/facilities';
+import FacilitiesList from '../facilities/FacilitiesList';
+import Spinner from '../layout/Spinner';
+import {
+  fetchFacilities,
+  filterFacilities,
+  clearFilteredFacilities,
+} from '../../actions/facilities';
+import { loadUser } from '../../actions/auth';
 
-const Facilities = ({ fetchFacilities, facilities }) => {
+const Facilities = (props) => {
+  const [searchTerm, setSearchTerm] = useState('');
+
+  const {
+    currentUser,
+    facilities,
+    filteredFacilities,
+    fetchFacilities,
+    filterFacilities,
+    facilitiesLoading,
+    clearFilteredFacilities,
+  } = props;
+
   useEffect(() => {
+    if (!currentUser) loadUser();
     fetchFacilities();
     // eslint-disable-next-line
   }, []);
+
+  useEffect(() => {
+    if (searchTerm) {
+      filterFacilities(searchTerm);
+    } else {
+      clearFilteredFacilities();
+    }
+    // eslint-disable-next-line
+  }, [searchTerm]);
+
+  if (facilities !== null && facilities.length === 0 && !facilitiesLoading) {
+    return <h4 className='ui header'>Please add a facility</h4>;
+  }
 
   return (
     <Fragment>
@@ -18,42 +52,38 @@ const Facilities = ({ fetchFacilities, facilities }) => {
         <Sidebar />
 
         <div className='admin-content'>
-          <div className='top-section'>
-            <div className='search section'>
-              <form>
+          <div className='search-form'>
+            <form>
+              <div class='ui small icon input'>
                 <input
                   type='text'
-                  name='search-term'
-                  className='search-input'
-                  placeholder='search...'
+                  placeholder='Search a facility...'
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
                 />
-              </form>
-            </div>
-            &nbsp;
-            <button className='btn'>
-              <Link to='/facilities/new'>Add Facility</Link>
-            </button>
+                <i class='search icon'></i>
+              </div>
+            </form>
+            <Link class='ui  primary small button' to='/facilities/new'>
+              Add Facility
+            </Link>
           </div>
-          <br />
-          <div className='main-section'>
-            {facilities &&
-              facilities.map((facility) => (
-                <div key={facility._id} className='admin-btn'>
-                  <p>
-                    {facility.name} |{' '}
-                    <span className='user-role'>{facility.category}</span>
-                  </p>
-                  <div className='controls'>
-                    <Link to='/facilities/edit'>
-                      <i className='fas fa-edit'></i>
-                    </Link>
-                    <Link to='/facilities/delete'>
-                      <i className='fas fa-trash-alt'></i>
-                    </Link>
-                  </div>
-                </div>
-              ))}
-          </div>
+
+          <Fragment>
+            {facilities !== null && !facilitiesLoading ? (
+              <TransitionGroup>
+                {filteredFacilities ? (
+                  <FacilitiesList facilities={filteredFacilities} />
+                ) : (
+                  <FacilitiesList facilities={facilities} />
+                )}
+              </TransitionGroup>
+            ) : (
+              <div className='spinner-wrapper'>
+                <Spinner text={'Loading facilities...'} size={'medium'} />
+              </div>
+            )}
+          </Fragment>
         </div>
       </div>
     </Fragment>
@@ -61,9 +91,23 @@ const Facilities = ({ fetchFacilities, facilities }) => {
 };
 
 const mapStateToProps = (state) => {
+  const { currentUser } = state.auth;
+  const {
+    facilities,
+    filteredFacilities,
+    facilitiesLoading,
+  } = state.facilities;
+
   return {
-    facilities: state.facilities.facilities,
+    currentUser,
+    facilities,
+    filteredFacilities,
+    facilitiesLoading,
   };
 };
 
-export default connect(mapStateToProps, { fetchFacilities })(Facilities);
+export default connect(mapStateToProps, {
+  fetchFacilities,
+  filterFacilities,
+  clearFilteredFacilities,
+})(Facilities);
