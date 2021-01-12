@@ -4,17 +4,17 @@ import { CSSTransition } from 'react-transition-group';
 
 const FacilitiesList = ({ facilities }) => {
   return (
-    <div class='ui relaxed divided list facilities-list'>
+    <div className='ui relaxed divided list facilities-list'>
       {facilities &&
         facilities.map((facility) => (
           <CSSTransition key={facility._id} timeout={500} classNames='item'>
-            <div class='item'>
-              <div class='content'>
-                <Link class='header' to='/facilities/edit'>
+            <div className='item'>
+              <div className='content'>
+                <Link className='header' to='/facilities/edit'>
                   {facility.name} |{' '}
                   <span className='user-role'>{facility.category}</span>
                 </Link>
-                <div class='description'>
+                <div className='description'>
                   <div className='wrapper'>
                     <div className='text'>{facility.description}</div>
                     <div className='controls'>

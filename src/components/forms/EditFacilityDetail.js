@@ -29,18 +29,35 @@ export class EditFacilityDetail extends Component {
         <div className='field'>
           <label>Location Coordinates</label>
           <div className='two fields'>
-            <Field
-              name='location.longitude'
-              type='number'
-              component={this.renderField}
-              placeholder='Longitude'
-            />
-            <Field
-              name='location.latitude'
-              type='number'
-              component={this.renderField}
-              placeholder='Latitude'
-            />
+            {fields.map((coord, index) => {
+              if (index === 0) {
+                return (
+                  <div className='field' key={index}>
+                    <h6 className='ui header'>Longitude</h6>
+                    <Field
+                      name={coord}
+                      type='number'
+                      component={this.renderField}
+                      placeholder='Longitude'
+                      step='0.0005'
+                    />
+                  </div>
+                );
+              } else {
+                return (
+                  <div className='field' key={index}>
+                    <h6 className='ui header'>Latitude</h6>
+                    <Field
+                      name={coord}
+                      type='number'
+                      component={this.renderField}
+                      placeholder='Latitude'
+                      step='0.0005'
+                    />
+                  </div>
+                );
+              }
+            })}
           </div>
         </div>
       </Fragment>
@@ -109,8 +126,10 @@ export class EditFacilityDetail extends Component {
               </Field>
             </div>
           </div>
-
-          <FieldArray name='location' component={this.renderLocation} />
+          <FieldArray
+            name='location.coordinates'
+            component={this.renderLocation}
+          />
 
           <Field
             name='address'
@@ -127,7 +146,7 @@ export class EditFacilityDetail extends Component {
             placeholder='Enter email of facility'
           />
           <Field
-            name='Website'
+            name='website'
             type='text'
             component={this.renderField}
             label='Website'
@@ -172,6 +191,11 @@ const validate = (formValues) => {
 };
 
 export default reduxForm({
+  initialValues: {
+    location: {
+      coordinates: [-1, 1],
+    },
+  },
   form: 'facilityform', // <------ same form name
   destroyOnUnmount: false, // <------ preserve form data
   forceUnregisterOnUnmount: false, // <------ unregister fields on unmount

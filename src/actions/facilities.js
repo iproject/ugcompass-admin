@@ -1,6 +1,8 @@
 import ugCompass from '../apis/ugCompass';
+import history from '../utils/history';
 import {
   FETCH_FACILITIES_SUCCESS,
+  CREATE_FACILITY_SUCCESS,
   SEARCH_FACILITIES_SUCCESS,
   FILTER_FACILITIES,
   CLEAR_FILTERED_FACILITIES,
@@ -51,3 +53,20 @@ export const clearFilteredFacilities = () => ({
   type: CLEAR_FILTERED_FACILITIES,
   // Todo: Handle Errors
 });
+
+export const createFacility = (formValues) => async (dispatch, getState) => {
+  getState().facilities.facilitiesLoading = true;
+  try {
+    await ugCompass.post('/facilities', formValues, {
+      headers: {
+        Authorization: localStorage.ugcompass_token,
+        'Content-Type': 'application/json',
+      },
+    });
+    fetchFacilities();
+    history.push('/facilities');
+  } catch (err) {
+    console.log(err);
+    // Todo: Handle Errors
+  }
+};

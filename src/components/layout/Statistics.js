@@ -20,19 +20,19 @@ const Statistics = ({
       {currentUser &&
         (currentUser.role === 'admin' ? (
           <div className='column'>
-            <div class='ui card'>
-              <div class='content'>
-                <i class='right floated users icon'></i>
-                <div class='header'>
-                  <div class='ui statistic small'>
-                    <div class='value'>
+            <div className='ui card'>
+              <div className='content'>
+                <i className='right floated users icon'></i>
+                <div className='header'>
+                  <div className='ui statistic small'>
+                    <div className='value'>
                       {!usersLoading ? (
                         numberOfUsers
                       ) : (
-                        <div class='ui active centered inline loader'></div>
+                        <div className='ui active centered inline loader'></div>
                       )}
                     </div>
-                    <div class='label'>Users</div>
+                    <div className='label'>Users</div>
                   </div>
                 </div>
               </div>
@@ -41,38 +41,38 @@ const Statistics = ({
         ) : null)}
 
       <div className='column'>
-        <div class='ui card'>
-          <div class='content'>
-            <i class='right floated building icon'></i>
-            <div class='header'>
-              <div class='ui statistic small'>
-                <div class='value'>
+        <div className='ui card'>
+          <div className='content'>
+            <i className='right floated building icon'></i>
+            <div className='header'>
+              <div className='ui statistic small'>
+                <div className='value'>
                   {!facilitiesLoading ? (
                     numberOfFacilities
                   ) : (
-                    <div class='ui active centered inline loader'></div>
+                    <div className='ui active centered inline loader'></div>
                   )}
                 </div>
-                <div class='label'>Facilities</div>
+                <div className='label'>Facilities</div>
               </div>
             </div>
           </div>
         </div>
       </div>
       <div className='column'>
-        <div class='ui card'>
-          <div class='content'>
-            <i class='right floated warehouse icon'></i>
-            <div class='header'>
-              <div class='ui statistic small'>
-                <div class='value'>
+        <div className='ui card'>
+          <div className='content'>
+            <i className='right floated warehouse icon'></i>
+            <div className='header'>
+              <div className='ui statistic small'>
+                <div className='value'>
                   {!roomsLoading ? (
                     numberOfRooms
                   ) : (
-                    <div class='ui active centered inline loader'></div>
+                    <div className='ui active centered inline loader'></div>
                   )}
                 </div>
-                <div class='label'>Rooms</div>
+                <div className='label'>Rooms</div>
               </div>
             </div>
           </div>
@@ -87,9 +87,9 @@ Statistics.propTypes = {
   facilitiesLoading: PropTypes.bool.isRequired,
   roomsLoading: PropTypes.bool.isRequired,
   usersLoading: PropTypes.bool.isRequired,
-  numberOfFacilities: PropTypes.bool.isRequired,
-  numberOfRooms: PropTypes.bool.isRequired,
-  numberOfUsers: PropTypes.bool.isRequired,
+  numberOfFacilities: PropTypes.number.isRequired,
+  numberOfRooms: PropTypes.number.isRequired,
+  numberOfUsers: PropTypes.number.isRequired,
 };
 
 export default Statistics;

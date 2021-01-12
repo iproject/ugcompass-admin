@@ -1,10 +1,12 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 import EditFacilityDetail from '../forms/EditFacilityDetail';
 import EditFacilityPhotos from '../forms/EditFacilityPhotos';
 import EditFacilityWorkingHours from '../forms/EditFacilityWorkingHours';
 import Sidebar from '../layout/LeftSidebar';
 import Navbar from '../layout/MainNavbar';
+import { createFacility } from '../../actions/facilities';
 
 class FacilityCreate extends Component {
   constructor(props) {
@@ -26,12 +28,10 @@ class FacilityCreate extends Component {
 
   // On wizard form submission
   onSubmit = (formValues) => {
-    console.log('Form Submitted Successfully');
-    console.log(formValues);
+    this.props.createFacility(formValues);
   };
 
   render() {
-    // const { onSubmit } = this.props;
     const { page } = this.state;
     return (
       <Fragment>
@@ -39,21 +39,28 @@ class FacilityCreate extends Component {
         <div className='admin-wrapper'>
           <Sidebar />
           <div className='admin-content'>
-            <div className='add-content'>
-              {page === 1 && <EditFacilityDetail onSubmit={this.nextPage} />}
-              {page === 2 && (
-                <EditFacilityWorkingHours
-                  previousPage={this.previousPage}
-                  onSubmit={this.nextPage}
-                />
-              )}
-              {page === 3 && (
-                <EditFacilityPhotos
-                  previousPage={this.previousPage}
-                  onSubmit={this.onSubmit}
-                />
-              )}
-            </div>
+            <Link
+              className='ui left labeled tiny icon button '
+              style={{ marginTop: '-2rem', marginBottom: '1rem' }}
+              type='button'
+              to='/facilities'
+            >
+              <i className='left arrow icon'></i>
+              Back To List
+            </Link>{' '}
+            {page === 1 && <EditFacilityDetail onSubmit={this.nextPage} />}
+            {page === 2 && (
+              <EditFacilityWorkingHours
+                previousPage={this.previousPage}
+                onSubmit={this.nextPage}
+              />
+            )}
+            {page === 3 && (
+              <EditFacilityPhotos
+                previousPage={this.previousPage}
+                onSubmit={this.onSubmit}
+              />
+            )}
           </div>
         </div>
       </Fragment>
@@ -61,4 +68,4 @@ class FacilityCreate extends Component {
   }
 }
 
-export default connect()(FacilityCreate);
+export default connect(null, { createFacility })(FacilityCreate);

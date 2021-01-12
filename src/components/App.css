@@ -13,6 +13,7 @@ body {
   height: 100%;
   padding: 0px;
   margin: 0px;
+  overflow: hidden;
 }
 
 button:hover {
@@ -144,12 +145,15 @@ button:hover {
 }
 
 /* **** Main Content */
+.admin-wrapper {
+  height: calc(100vh - 60px);
+}
 .admin-content {
   margin-left: 50px;
   flex: 8; /*take up 80% of the page*/
   height: 100%;
-  padding: 2rem 2rem;
-  overflow-y: scroll;
+  padding: 1.5rem 2rem;
+  overflow-y: auto;
 }
 .admin-content .search-form {
   display: flex;

@@ -1,16 +1,31 @@
 import React, { Component, Fragment } from 'react';
+import { connect } from 'react-redux';
 import { reduxForm, Field } from 'redux-form';
 
 export class EditFacilityPhotos extends Component {
   render() {
-    const { handleSubmit, pristine, previousPage, submitting } = this.props;
+    const {
+      handleSubmit,
+      pristine,
+      previousPage,
+      submitting,
+      addFacilityLoading,
+    } = this.props;
+
+    const submitForm = (e) => {
+      e.preventDefault();
+      handleSubmit();
+    };
 
     return (
       <Fragment>
-        <h2 className='form-title'>Select Photo for Facility</h2>
-        <br />
-        <p>You can add a maximum of 5 photos for a room</p>
-        <form onSubmit={handleSubmit}>
+        <h3 className='ui dividing header'>Select Photo for Facility</h3>
+        <p>
+          <span style={{ color: 'red' }}>Note:</span> You can add a maximum of 5
+          photos for a facility
+        </p>
+
+        <form onSubmit={submitForm}>
           <div>
             <div className='form-group'>
               <img src='images/placeholder1.jpg' id='roomPhoto' alt='' />
@@ -24,16 +39,26 @@ export class EditFacilityPhotos extends Component {
             </div>
           </div>
 
-          <div>
-            <button type='button' className='previous' onClick={previousPage}>
-              Previous
-            </button>
+          <div style={{ marginTop: '2rem' }}>
             <button
-              className='add-btn'
-              type='submit'
-              disabled={pristine || submitting}
+              className='ui left labeled left floated icon button black'
+              style={{ marginTop: '1rem' }}
+              type='button'
+              onClick={previousPage}
             >
-              Submit
+              <i className='left arrow icon'></i>
+              Previous Page
+            </button>
+
+            <button
+              className={`ui right right floated icon button green ${
+                addFacilityLoading ? 'loading' : null
+              }`}
+              style={{ marginTop: '1rem' }}
+              type='submit'
+              // disabled={pristine || submitting}
+            >
+              Add Facility
             </button>
           </div>
         </form>
@@ -42,8 +67,17 @@ export class EditFacilityPhotos extends Component {
   }
 }
 
-export default reduxForm({
+const mapStateToProps = (state) => {
+  return {
+    addFacilityLoading: state.facilities.facilitiesLoading,
+  };
+};
+
+const formWrapper = reduxForm({
   form: 'facilityform', // <------ same form name
+  initialValues: { photo: [] },
   destroyOnUnmount: false, // <------ preserve form data
   forceUnregisterOnUnmount: true, // <------ unregister fields on unmount
 })(EditFacilityPhotos);
+
+export default connect(mapStateToProps)(formWrapper);

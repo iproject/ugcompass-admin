@@ -3,6 +3,7 @@ import {
   SEARCH_FACILITIES_SUCCESS,
   CLEAR_FILTERED_FACILITIES,
   FILTER_FACILITIES,
+  CREATE_FACILITY_SUCCESS,
 } from '../actions/types';
 
 const initialState = {

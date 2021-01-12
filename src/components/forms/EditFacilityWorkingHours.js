@@ -1,132 +1,104 @@
-import React, { Component } from 'react';
-import { reduxForm, Field } from 'redux-form';
+import React, { Component, Fragment } from 'react';
+import { reduxForm, FieldArray, Field } from 'redux-form';
 
 export class EditFacilityWorkingHours extends Component {
-  state = {
-    workingHourFields: 1,
-  };
-
-  renderError({ touched, error }) {
-    if (touched && error) {
-      return (
-        <div className='ui error message'>
-          <div className='header'>{error}</div>
-        </div>
-      );
-    }
-  }
-
-  renderInput = ({ input, label, meta }) => {
-    const className = `field ${meta.touched && meta.error ? 'error' : ''}`;
-
-    return (
-      <div className={className}>
-        <label>{label}</label>
-        <input {...input} autoComplete='off' />
-        {this.renderError(meta)}
+  renderField = ({
+    input,
+    label,
+    placeholder,
+    type,
+    meta: { touched, error },
+  }) => (
+    <div className='field'>
+      {label && <label>{label}</label>}
+      <div>
+        <input
+          placeholder={placeholder}
+          {...input}
+          type={type}
+          autoComplete='off'
+        />
+        {touched && error && <span>{error}</span>}
       </div>
+    </div>
+  );
+  renderWorkingHours = ({ fields, meta: { error, submitFailed } }) => {
+    return (
+      <Fragment>
+        {fields.map((hour, index) => (
+          <div className='ui segment' key={index}>
+            <div className='three fields'>
+              <div className='field'>
+                <label>Day</label>
+                <Field name={`${hour}.day`} component='select'>
+                  <option value='weekdays'>Weekdays</option>
+                  <option value='monday'>Monday</option>
+                  <option value='tuesday'>Tuesday</option>
+                  <option value='wednesday'>Wednesday</option>
+                  <option value='thursday'>Thursday</option>
+                  <option value='friday'>Friday</option>
+                  <option value='saturday'>Saturday</option>
+                  <option value='sunday'>Sunday</option>
+                </Field>
+              </div>
+              <Field
+                name={`${hour}.open`}
+                type='time'
+                label='Start Time'
+                component={this.renderField}
+                className='time'
+              />
+              <Field
+                name={`${hour}.close`}
+                type='time'
+                label='End Time'
+                component={this.renderField}
+                className='time'
+              />
+            </div>
+          </div>
+        ))}
+        <button
+          className='ui button primary'
+          type='button'
+          onClick={() => fields.push({})}
+        >
+          Add Hour
+        </button>
+        {submitFailed && error && <span>{error}</span>}
+      </Fragment>
     );
-  };
-
-  onSubmit = (formValues) => {
-    this.props.createStream(formValues);
-  };
-
-  renderWorkingHours = () => {
-    var rows = [];
-
-    for (var i = 0; i < this.state.workingHourFields; i++) {
-      const row = (
-        <div className='working-hours-wrapper' key={i}>
-          <div className='Days'>
-            <label>Day</label>
-            <br />
-            <Field
-              name={`workingDay${this.state.workingHourFields}`}
-              className='days'
-              component='select'
-            >
-              <option value='monday'>Monday</option>
-              <option value='tuesday'>Tuesday</option>
-              <option value='wednesday'>Wednesday</option>
-              <option value='thursday'>Thursday</option>
-              <option value='friday'>Friday</option>
-              <option value='saturday'>Saturday</option>
-              <option value='sunday'>Sunday</option>
-            </Field>
-          </div>
-          <div className='Start-time'>
-            <Field
-              name={`startTime${this.state.workingHourFields}`}
-              type='time'
-              label='Start Time'
-              component={this.renderField}
-              className='time'
-            />
-          </div>
-          <div className='End-time'>
-            <Field
-              name={`endTime${this.state.workingHourFields}`}
-              type='time'
-              label='End Time'
-              component={this.renderField}
-              className='time'
-            />
-          </div>
-        </div>
-      );
-
-      rows.push(row);
-    }
-
-    return rows;
   };
 
   render() {
     const { handleSubmit, previousPage } = this.props;
     return (
-      <div className='container'>
-        <form onSubmit={handleSubmit}>
-          <h3 className='ui dividing header'>Edit Facility Information</h3>
-          <Field type='text' component='input' name='time' />
+      <form className='ui form' onSubmit={handleSubmit}>
+        <h3 className='ui dividing header'>Add Working Hours</h3>
 
-          <div>
-            <button
-              className='ui left floated button black labeled icon'
-              style={{ marginTop: '1rem' }}
-              type='button'
-              onClick={previousPage}
-            >
-              <i className='left arrow icon'></i>
-              Previous Page
-            </button>
+        <FieldArray name='hours' component={this.renderWorkingHours} />
 
-            <button
-              class='ui right labeled right floated icon button black'
-              style={{ marginTop: '1rem' }}
-              type='submit'
-            >
-              <i class='right arrow icon'></i>
-              Next Page
-            </button>
-          </div>
-        </form>
-
-        {/* <label>Working Hours</label>
-        <div className='working-hours'>{this.renderWorkingHours()}</div>
-        <div className='New-hour'>
+        <div style={{ marginTop: '2rem' }}>
           <button
-            className='btn new-hour'
-            onClick={() =>
-              this.setState({
-                workingHourFields: this.state.workingHourFields + 1,
-              })
-            }
+            className='ui left labeled left floated icon button black'
+            style={{ marginTop: '1rem' }}
+            type='button'
+            onClick={previousPage}
           >
-            New Hour
+            <i className='left arrow icon'></i>
+            Previous Page
           </button>
-        </div> */}
-      </div>
+
+          <button
+            className='ui right labeled right floated icon button black'
+            style={{ marginTop: '1rem' }}
+            type='submit'
+          >
+            <i className='right arrow icon'></i>
+            Next Page
+          </button>
+        </div>
+      </form>
     );
   }
 }

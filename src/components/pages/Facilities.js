@@ -54,17 +54,17 @@ const Facilities = (props) => {
         <div className='admin-content'>
           <div className='search-form'>
             <form>
-              <div class='ui small icon input'>
+              <div className='ui small icon input'>
                 <input
                   type='text'
                   placeholder='Search a facility...'
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                 />
-                <i class='search icon'></i>
+                <i className='search icon'></i>
               </div>
             </form>
-            <Link class='ui  primary small button' to='/facilities/new'>
+            <Link className='ui  primary small button' to='/facilities/new'>
               Add Facility
             </Link>
           </div>
