@@ -24,39 +24,49 @@ export class EditFacilityWorkingHours extends Component {
   );
   renderWorkingHours = ({ fields, meta: { error, submitFailed } }) => {
     return (
-      <Fragment>
+      <>
         {fields.map((hour, index) => (
-          <div className='ui segment' key={index}>
-            <div className='three fields'>
-              <div className='field'>
-                <label>Day</label>
-                <Field name={`${hour}.day`} component='select'>
-                  <option value='weekdays'>Weekdays</option>
-                  <option value='monday'>Monday</option>
-                  <option value='tuesday'>Tuesday</option>
-                  <option value='wednesday'>Wednesday</option>
-                  <option value='thursday'>Thursday</option>
-                  <option value='friday'>Friday</option>
-                  <option value='saturday'>Saturday</option>
-                  <option value='sunday'>Sunday</option>
-                </Field>
+          <Fragment>
+            <div className='ui segment working-hour-field' key={index}>
+              <button
+                class='ui tiny circular light icon button delete-btn'
+                type='button'
+                onClick={() => fields.remove(index)}
+              >
+                <i class='trash icon'></i>
+              </button>
+
+              <div className='three fields'>
+                <div className='field'>
+                  <label>Day</label>
+                  <Field name={`${hour}.day`} component='select'>
+                    <option value='weekdays'>Weekdays</option>
+                    <option value='monday'>Monday</option>
+                    <option value='tuesday'>Tuesday</option>
+                    <option value='wednesday'>Wednesday</option>
+                    <option value='thursday'>Thursday</option>
+                    <option value='friday'>Friday</option>
+                    <option value='saturday'>Saturday</option>
+                    <option value='sunday'>Sunday</option>
+                  </Field>
+                </div>
+                <Field
+                  name={`${hour}.open`}
+                  type='time'
+                  label='Start Time'
+                  component={this.renderField}
+                  className='time'
+                />
+                <Field
+                  name={`${hour}.close`}
+                  type='time'
+                  label='End Time'
+                  component={this.renderField}
+                  className='time'
+                />
               </div>
-              <Field
-                name={`${hour}.open`}
-                type='time'
-                label='Start Time'
-                component={this.renderField}
-                className='time'
-              />
-              <Field
-                name={`${hour}.close`}
-                type='time'
-                label='End Time'
-                component={this.renderField}
-                className='time'
-              />
             </div>
-          </div>
+          </Fragment>
         ))}
         <button
           className='ui button primary'
@@ -66,7 +76,7 @@ export class EditFacilityWorkingHours extends Component {
           Add Hour
         </button>
         {submitFailed && error && <span>{error}</span>}
-      </Fragment>
+      </>
     );
   };
 
@@ -121,5 +131,7 @@ export default reduxForm({
   form: 'facilityform', // <------ same form name
   destroyOnUnmount: false, // <------ preserve form data
   forceUnregisterOnUnmount: true, // <------ unregister fields on unmount
+  enableReinitialize: true,
+  keepDirtyOnReinitialize: true,
   validate,
 })(EditFacilityWorkingHours);

@@ -3,17 +3,24 @@ import { connect } from 'react-redux';
 import { reduxForm, Field } from 'redux-form';
 
 export class EditFacilityPhotos extends Component {
+  componentDidMount() {
+    const isEditing = window.location.pathname.split('/')[3];
+    if (isEditing === 'edit') this.isEditing = isEditing;
+    console.log(this.isEditing);
+  }
+
   render() {
     const {
       handleSubmit,
       pristine,
       previousPage,
       submitting,
-      addFacilityLoading,
+      facilitiesLoading,
     } = this.props;
 
     const submitForm = (e) => {
       e.preventDefault();
+      this.props.disableNavigationBlocking();
       handleSubmit();
     };
 
@@ -52,13 +59,13 @@ export class EditFacilityPhotos extends Component {
 
             <button
               className={`ui right right floated icon button green ${
-                addFacilityLoading ? 'loading' : null
+                facilitiesLoading ? 'loading' : null
               }`}
               style={{ marginTop: '1rem' }}
               type='submit'
               // disabled={pristine || submitting}
             >
-              Add Facility
+              {this.isEditing ? 'Update Facility' : 'Add Facility'}
             </button>
           </div>
         </form>
@@ -69,7 +76,7 @@ export class EditFacilityPhotos extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    addFacilityLoading: state.facilities.facilitiesLoading,
+    facilitiesLoading: state.facilities.facilitiesLoading,
   };
 };
 
@@ -78,6 +85,8 @@ const formWrapper = reduxForm({
   initialValues: { photo: [] },
   destroyOnUnmount: false, // <------ preserve form data
   forceUnregisterOnUnmount: true, // <------ unregister fields on unmount
+  enableReinitialize: true,
+  keepDirtyOnReinitialize: true,
 })(EditFacilityPhotos);
 
 export default connect(mapStateToProps)(formWrapper);

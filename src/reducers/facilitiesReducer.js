@@ -1,13 +1,17 @@
 import {
   FETCH_FACILITIES_SUCCESS,
+  FETCH_FACILITY_SUCCESS,
+  CREATE_FACILITY_SUCCESS,
+  DELETE_FACILITY_SUCCESS,
   SEARCH_FACILITIES_SUCCESS,
+  CLEAR_CURRENT_FACILITY,
   CLEAR_FILTERED_FACILITIES,
   FILTER_FACILITIES,
-  CREATE_FACILITY_SUCCESS,
 } from '../actions/types';
 
 const initialState = {
   facilities: null,
+  currentFacility: null,
   facilitiesLoading: true,
   filteredFacilities: null,
   searchedFacilities: null,
@@ -18,7 +22,36 @@ const initialState = {
 const facilitiesReducer = (state = initialState, { type, payload }) => {
   switch (type) {
     case FETCH_FACILITIES_SUCCESS:
-      return { ...state, facilities: payload.data, facilitiesLoading: false };
+      return {
+        ...state,
+        facilities: payload.data,
+        facilitiesLoading: false,
+      };
+
+    case FETCH_FACILITY_SUCCESS:
+      return {
+        ...state,
+        currentFacility: payload.data,
+        facilitiesLoading: false,
+      };
+
+    case CREATE_FACILITY_SUCCESS:
+      return {
+        ...state,
+        facilities: !payload.facilites
+          ? [payload.facility]
+          : [payload.facility, ...payload.facilities],
+        facilitiesLoading: false,
+      };
+
+    case DELETE_FACILITY_SUCCESS:
+      return {
+        ...state,
+        facilities: payload.facilities.filter(
+          (facility) => facility._id !== payload.facilityId
+        ),
+        facilitiesLoading: false,
+      };
 
     case SEARCH_FACILITIES_SUCCESS:
       return {
@@ -40,6 +73,13 @@ const facilitiesReducer = (state = initialState, { type, payload }) => {
       return {
         ...state,
         filteredFacilities: null,
+        facilitiesLoading: false,
+      };
+
+    case CLEAR_CURRENT_FACILITY:
+      return {
+        ...state,
+        currentFacility: null,
         facilitiesLoading: false,
       };
 

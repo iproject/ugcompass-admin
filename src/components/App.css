@@ -44,6 +44,27 @@ button:hover {
   margin-top: 1rem !important;
 }
 
+.working-hour-field {
+  position: relative;
+  padding: 1rem 2rem !important;
+  padding-bottom: 0.5rem !important;
+}
+.working-hour-field .delete-btn {
+  position: absolute;
+  right: -18px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.edit-facility-detail-form {
+  position: relative !important;
+}
+.populating-form-msg {
+  position: absolute !important;
+  top: -35px;
+  right: -5px;
+}
+
 /* **** Main Header */
 .main-header {
   height: 60px;
@@ -218,7 +239,7 @@ button:hover {
 }
 .facilities-list .description .text {
   display: -webkit-box;
-  -webkit-line-clamp: 2;
+  -webkit-line-clamp: 1;
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;

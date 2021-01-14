@@ -1,4 +1,5 @@
 import React, { Component, Fragment } from 'react';
+import { connect } from 'react-redux';
 import { reduxForm, FieldArray, Field } from 'redux-form';
 
 export class EditFacilityDetail extends Component {
@@ -65,10 +66,20 @@ export class EditFacilityDetail extends Component {
   };
 
   render() {
+    const { handleSubmit, facilitiesLoading } = this.props;
+
     return (
       <div className='container ui'>
-        <form className='ui form' onSubmit={this.props.handleSubmit}>
+        <form
+          className='ui form edit-facility-detail-form'
+          onSubmit={handleSubmit}
+        >
           <h3 className='ui dividing header'>Edit Facility Information</h3>
+          {facilitiesLoading && (
+            <div className='ui compact message populating-form-msg'>
+              <p>Populating form. Please wait...</p>
+            </div>
+          )}
           <Field
             name='name'
             type='text'
@@ -154,7 +165,7 @@ export class EditFacilityDetail extends Component {
           />
           <Field
             name='phone'
-            type='number'
+            type='text'
             component={this.renderField}
             label='Phone'
             placeholder='Enter phone of facility'
@@ -190,15 +201,30 @@ const validate = (formValues) => {
   return errors;
 };
 
-export default reduxForm({
-  initialValues: {
-    location: {
-      coordinates: [-1, 1],
-    },
-  },
+const mapStateToProps = (state, ownProps) => {
+  const { facilitiesLoading } = state.facilities;
+
+  return {
+    facilitiesLoading,
+    initialValues:
+      ownProps.currentFacility !== null
+        ? ownProps.currentFacility
+        : {
+            location: {
+              coordinates: [-1, 1],
+            },
+          },
+  };
+};
+
+const formWrapper = reduxForm({
   form: 'facilityform', // <------ same form name
   destroyOnUnmount: false, // <------ preserve form data
   forceUnregisterOnUnmount: false, // <------ unregister fields on unmount
   updateUnregisteredFields: true,
+  enableReinitialize: true,
+  keepDirtyOnReinitialize: true,
   validate,
 })(EditFacilityDetail);
+
+export default connect(mapStateToProps)(formWrapper);
