@@ -2,7 +2,7 @@ import { FETCH_USERS_SUCCESS } from '../actions/types';
 
 const initialState = {
   users: null,
-  loading: true,
+  usersLoading: true,
   error: null,
   message: null,
 };
@@ -10,7 +10,7 @@ const initialState = {
 const usersReducer = (state = initialState, { type, payload }) => {
   switch (type) {
     case FETCH_USERS_SUCCESS:
-      return { ...state, users: payload };
+      return { ...state, users: payload, usersLoading: false };
 
     default:
       return state;

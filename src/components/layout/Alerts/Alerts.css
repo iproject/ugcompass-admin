@@ -1,0 +1,13 @@
+.alert-container {
+  margin: auto;
+  max-width: 600px;
+  position: fixed;
+  top: 80px;
+  left: 0;
+  right: 0;
+  z-index: 9;
+}
+
+sl-icon {
+  margin-left: 1.5rem;
+}

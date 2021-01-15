@@ -1,15 +1,49 @@
-import React, { Fragment, useEffect } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { TransitionGroup } from 'react-transition-group';
+import { connect } from 'react-redux';
 import Sidebar from '../layout/LeftSidebar';
 import Navbar from '../layout/MainNavbar';
-import { connect } from 'react-redux';
-import { fetchRooms } from '../../actions/rooms';
+import RoomsList from '../rooms/RoomsList';
+import Spinner from '../layout/Spinner';
+import {
+  fetchRooms,
+  filterRooms,
+  clearFilteredRooms,
+} from '../../actions/rooms';
+import { loadUser } from '../../actions/auth';
 
-const Rooms = ({ fetchRooms, rooms }) => {
+const Rooms = (props) => {
+  const [searchTerm, setSearchTerm] = useState('');
+
+  const {
+    currentUser,
+    rooms,
+    filteredRooms,
+    fetchRooms,
+    filterRooms,
+    roomsLoading,
+    clearFilteredRooms,
+  } = props;
+
   useEffect(() => {
+    if (!currentUser) loadUser();
     fetchRooms();
     // eslint-disable-next-line
   }, []);
+
+  useEffect(() => {
+    if (searchTerm) {
+      filterRooms(searchTerm);
+    } else {
+      clearFilteredRooms();
+    }
+    // eslint-disable-next-line
+  }, [searchTerm]);
+
+  if (rooms !== null && rooms.length === 0 && !roomsLoading) {
+    return <h4 className='ui header'>Please add a room</h4>;
+  }
 
   return (
     <Fragment>
@@ -19,42 +53,37 @@ const Rooms = ({ fetchRooms, rooms }) => {
         <Sidebar />
 
         <div className='admin-content'>
-          <div className='top-section'>
-            <div className='search section'>
-              <form>
+          <div className='search-form'>
+            <form>
+              <div className='ui small icon input'>
                 <input
                   type='text'
-                  name='search-term'
-                  className='search-input'
-                  placeholder='search...'
+                  placeholder='Search a room...'
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
                 />
-              </form>
-            </div>
-            &nbsp;
-            <Link to='/rooms/new' className='btn'>
+                <i className='search icon'></i>
+              </div>
+            </form>
+            <Link className='ui  primary small button' to='/rooms/new'>
               Add Room
             </Link>
           </div>
-          <br />
-          <div className='main-section'>
-            {rooms &&
-              rooms.map((room) => (
-                <div key={room._id} className='admin-btn'>
-                  <p>
-                    {room.name} |{' '}
-                    <span className='user-role'>{room.category}</span>
-                  </p>
-                  <div className='controls'>
-                    <Link to='/rooms/edit'>
-                      <i className='fas fa-edit'></i>
-                    </Link>
-                    <Link to='/rooms/delete'>
-                      <i className='fas fa-trash-alt'></i>
-                    </Link>
-                  </div>
-                </div>
-              ))}
-          </div>
+          <Fragment>
+            {rooms !== null && !roomsLoading ? (
+              <TransitionGroup>
+                {filteredRooms ? (
+                  <RoomsList rooms={filteredRooms} />
+                ) : (
+                  <RoomsList rooms={rooms} />
+                )}
+              </TransitionGroup>
+            ) : (
+              <div className='spinner-wrapper'>
+                <Spinner text={'Loading rooms...'} size={'medium'} />
+              </div>
+            )}
+          </Fragment>
         </div>
       </div>
     </Fragment>
@@ -62,9 +91,19 @@ const Rooms = ({ fetchRooms, rooms }) => {
 };
 
 const mapStateToProps = (state) => {
+  const { currentUser } = state.auth;
+  const { rooms, filteredRooms, roomsLoading } = state.rooms;
+
   return {
-    rooms: state.rooms.rooms,
+    currentUser,
+    rooms,
+    filteredRooms,
+    roomsLoading,
   };
 };
 
-export default connect(mapStateToProps, { fetchRooms })(Rooms);
+export default connect(mapStateToProps, {
+  fetchRooms,
+  filterRooms,
+  clearFilteredRooms,
+})(Rooms);

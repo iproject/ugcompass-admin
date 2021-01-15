@@ -1,12 +1,15 @@
 import React, { Fragment, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-
+import { TransitionGroup } from 'react-transition-group';
+import { connect } from 'react-redux';
 import Sidebar from '../layout/LeftSidebar';
 import Navbar from '../layout/MainNavbar';
+import UsersList from '../users/UsersList';
+import Spinner from '../layout/Spinner';
 import { fetchUsers } from '../../actions/users';
 
-const Publishers = ({ fetchUsers, users }) => {
+const Users = ({ fetchUsers, users }) => {
   useEffect(() => {
     fetchUsers();
     // eslint-disable-next-line
@@ -65,4 +68,4 @@ const mapStateToProps = (state) => {
   };
 };
 
-export default connect(mapStateToProps, { fetchUsers })(Publishers);
+export default connect(mapStateToProps, { fetchUsers })(Users);

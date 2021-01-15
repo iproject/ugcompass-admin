@@ -2,11 +2,9 @@ import React from 'react';
 
 const SimpleNavbar = () => {
   return (
-    <>
-      <header>
-        <h1>UG COMPASS ADMIN</h1>
-      </header>
-    </>
+    <div className='simple-header'>
+      <h1>UGCompass Admin</h1>
+    </div>
   );
 };
 

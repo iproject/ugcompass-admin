@@ -1,20 +1,26 @@
 import React, { Component, Fragment } from 'react';
+import { Link } from 'react-router-dom';
 import { Field, reduxForm } from 'redux-form';
 import { connect } from 'react-redux';
-import SimpleNavbar from '../layout/SimpleNavbar';
-import { login } from '../../actions/auth';
-
+import Navbar from '../layout/SimpleNavbar';
+import { login, loadUser } from '../../actions/auth';
+import history from '../../utils/history';
 class Login extends Component {
+  componentDidMount() {
+    if (this.props.isAuthenticated) {
+      history.push('/');
+    }
+  }
+
   renderField = ({ input, label, type, meta: { touched, error, warning } }) => {
     return (
-      <div>
+      <div className='field'>
         <label>{label}</label>
         <div>
           <input
             {...input}
             placeholder={label}
             type={type}
-            className='text-input'
             autoComplete='off'
           />
           {touched &&
@@ -32,11 +38,14 @@ class Login extends Component {
   renderForm = () => {
     return (
       <Fragment>
-        <SimpleNavbar />
+        <Navbar />
         <div className='auth-content'>
-          <h2 className='form-title'>Login</h2>
+          <h2 className='ui header'>Login</h2>
 
-          <form onSubmit={this.props.handleSubmit(this.onSubmit)}>
+          <form
+            className='ui form'
+            onSubmit={this.props.handleSubmit(this.onSubmit)}
+          >
             <Field
               name='email'
               type='email'
@@ -51,16 +60,16 @@ class Login extends Component {
               label='Password'
             />
 
-            <div>
-              <button type='submit' name='Login' className='btn btn-big'>
-                Login
-              </button>
-            </div>
-
-            <div>
-              <p>
-                <a href='forgotpassword.html'>Forgot password?</a>
-              </p>
+            <button
+              className={`ui button fluid ${
+                this.props.loading ? 'loading' : null
+              }`}
+              type='submit'
+            >
+              Submit
+            </button>
+            <div className='ui field forgot-password'>
+              <Link to='/forgotpassword'>Forgot password?</Link>
             </div>
           </form>
         </div>
@@ -89,11 +98,21 @@ const validate = (values) => {
   return errors;
 };
 
+const mapStateToProps = (state) => {
+  const { authLoading, isAuthenticated } = state.auth;
+
+  return {
+    loading: authLoading,
+    isAuthenticated,
+  };
+};
+
 const formWrapper = reduxForm({
   form: 'loginForm',
   validate,
 })(Login);
 
-export default connect(null, {
+export default connect(mapStateToProps, {
   login,
+  loadUser,
 })(formWrapper);
