@@ -8,7 +8,8 @@ import { loadUser } from '../../actions/auth';
 import { fetchUsers } from '../../actions/users';
 import { fetchRooms } from '../../actions/rooms';
 import { fetchFacilities, fetchTopFacilities } from '../../actions/facilities';
-import TopFacilities from '../facilities/TopFacilities';
+import TopFacilities from '../layout/TopFacilities';
+import Activities from '../layout/Activities';
 
 export const Dashboard = (props) => {
   const {
@@ -62,6 +63,8 @@ export const Dashboard = (props) => {
                 topFacilities={topFacilities}
                 facilitiesLoading={facilitiesLoading}
               />
+
+              <Activities />
             </div>
           </main>
         </div>

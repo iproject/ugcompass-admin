@@ -1,5 +1,5 @@
 import React, { Fragment } from 'react';
-import Spinner from '../layout/Spinner';
+import Spinner from './Spinner';
 import { Rating } from 'semantic-ui-react';
 
 const TopFacilities = ({ topFacilities, facilitiesLoading }) => {
@@ -16,14 +16,26 @@ const TopFacilities = ({ topFacilities, facilitiesLoading }) => {
       }
 
       return (
-        <div className={`ui clearing ${position} attached segment`}>
+        <div key={index} className={`ui clearing ${position} attached segment`}>
           {facility.name}
 
-          <div class='ui right floated basic tiny button'>
+          <div
+            className='ui right floated basic tiny button'
+            style={ratingButtonStyle}
+          >
+            <span
+              style={{
+                fontWeight: 'bold',
+                marginRight: '0.25rem',
+              }}
+            >
+              Rating:{' '}
+            </span>
             <Rating
               icon='star'
               rating={Math.ceil(facility.averageRating / 2)}
               maxRating={5}
+              disabled
             />
           </div>
         </div>
@@ -44,6 +56,12 @@ const TopFacilities = ({ topFacilities, facilitiesLoading }) => {
       )}
     </Fragment>
   );
+};
+
+const ratingButtonStyle = {
+  display: 'flex',
+  alignItems: 'center',
+  cursor: 'auto',
 };
 
 export default TopFacilities;

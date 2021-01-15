@@ -4,7 +4,7 @@ import { TransitionGroup } from 'react-transition-group';
 import { connect } from 'react-redux';
 import Sidebar from '../layout/LeftSidebar';
 import Navbar from '../layout/MainNavbar';
-import RoomsList from '../rooms/RoomsList';
+import RoomsList from '../layout/RoomsList';
 import Spinner from '../layout/Spinner';
 import {
   fetchRooms,

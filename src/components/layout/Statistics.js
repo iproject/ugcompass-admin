@@ -27,28 +27,25 @@ const Statistics = ({
       // className='grid ui two column '
       className={`grid ui three column`}
     >
-      {currentUser &&
-        (currentUser.role === 'admin' ? (
-          <div className='column'>
-            <div className='ui card'>
-              <div className='content'>
-                <i className='right floated users icon'></i>
-                <div className='header'>
-                  <div className='ui statistic small'>
-                    <div className='value'>
-                      {!usersLoading ? (
-                        numberOfUsers
-                      ) : (
-                        <div className='inline ui active centered loader'></div>
-                      )}
-                    </div>
-                    <div className='label'>Signees</div>
-                  </div>
+      <div className='column'>
+        <div className='ui card'>
+          <div className='content'>
+            <i className='right floated users icon'></i>
+            <div className='header'>
+              <div className='ui statistic small'>
+                <div className='value'>
+                  {!usersLoading ? (
+                    numberOfUsers
+                  ) : (
+                    <div className='inline ui active centered loader'></div>
+                  )}
                 </div>
+                <div className='label'>Users</div>
               </div>
             </div>
           </div>
-        ) : null)}
+        </div>
+      </div>
 
       <div className='column'>
         <div className='ui card'>
@@ -100,7 +97,7 @@ const Statistics = ({
         <div className='ui inverted segment'>
           <div className='ui inverted horizontal tiny blue statistic'>
             <div className='value'>{getNumberOfUserRole('admin')}</div>
-            <div className='label'>Admins</div>
+            <div className='label'>Admin</div>
           </div>
         </div>
       </div>
@@ -108,7 +105,7 @@ const Statistics = ({
         <div className='ui inverted segment'>
           <div className='ui inverted horizontal tiny blue statistic'>
             <div className='value'>{getNumberOfUserRole('publisher')}</div>
-            <div className='label'>Publishers</div>
+            <div className='label'>Publisher</div>
           </div>
         </div>
       </div>
@@ -116,7 +113,7 @@ const Statistics = ({
         <div className='ui inverted segment'>
           <div className='ui inverted horizontal tiny blue statistic'>
             <div className='value'>{getNumberOfUserRole('user')}</div>
-            <div className='label'>Users</div>
+            <div className='label'>User</div>
           </div>
         </div>
       </div>

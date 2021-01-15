@@ -69,6 +69,12 @@ button:hover {
   display: inline !important;
 }
 
+.users-list i {
+  padding-top: 0.5rem !important;
+}
+.users-list .content.header {
+  padding-top: 0.75rem !important;
+}
 /* **** Main Header */
 .main-header {
   height: 60px;

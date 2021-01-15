@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { TransitionGroup } from 'react-transition-group';
 import Sidebar from '../layout/LeftSidebar';
 import Navbar from '../layout/MainNavbar';
-import FacilitiesList from '../facilities/FacilitiesList';
+import FacilitiesList from '../layout/FacilitiesList';
 import Spinner from '../layout/Spinner';
 import {
   fetchFacilities,

@@ -1,61 +1,94 @@
-import React, { Fragment, useEffect } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { connect } from 'react-redux';
 import { TransitionGroup } from 'react-transition-group';
 import { connect } from 'react-redux';
 import Sidebar from '../layout/LeftSidebar';
 import Navbar from '../layout/MainNavbar';
-import UsersList from '../users/UsersList';
+import UsersList from '../layout/UsersList';
 import Spinner from '../layout/Spinner';
-import { fetchUsers } from '../../actions/users';
+import {
+  fetchUsers,
+  filterUsers,
+  clearFilteredUsers,
+} from '../../actions/users';
+import { loadUser } from '../../actions/auth';
+import history from '../../utils/history';
 
-const Users = ({ fetchUsers, users }) => {
+const Users = (props) => {
+  const [searchTerm, setSearchTerm] = useState('');
+
+  const {
+    currentUser,
+    users,
+    filteredUsers,
+    fetchUsers,
+    filterUsers,
+    usersLoading,
+    clearFilteredUsers,
+  } = props;
+
   useEffect(() => {
+    if (!currentUser) loadUser();
+    if (currentUser.role !== 'admin') {
+      history.push('/');
+      // Todo: Alert user about unauthorized access
+    }
     fetchUsers();
     // eslint-disable-next-line
   }, []);
 
+  useEffect(() => {
+    if (searchTerm) {
+      filterUsers(searchTerm);
+    } else {
+      clearFilteredUsers();
+    }
+    // eslint-disable-next-line
+  }, [searchTerm]);
+
+  if (users !== null && users.length === 0 && !usersLoading) {
+    return <h4 className='ui header'>Please add a user</h4>;
+  }
+
   return (
     <Fragment>
       <Navbar />
+
       <div className='admin-wrapper'>
         <Sidebar />
+
         <div className='admin-content'>
-          <div className='top-section'>
-            <div className='search section'>
-              <form>
+          <div className='search-form'>
+            <form>
+              <div className='ui small icon input'>
                 <input
                   type='text'
-                  name='search-term'
-                  className='search-input'
-                  placeholder='search...'
+                  placeholder='Search a user...'
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
                 />
-              </form>
-            </div>
-            &nbsp;
-            <button className='btn'>
-              <Link to='/users/new'>Add User</Link>
-            </button>
+                <i className='search icon'></i>
+              </div>
+            </form>
+            <Link className='ui primary small button' to='/users/new'>
+              Add Room
+            </Link>
           </div>
-          <br />
-          <div className='main-section'>
-            {users &&
-              users.map((user) => (
-                <div key={user._id} className='admin-btn'>
-                  <p>
-                    {user.name} | <span className='user-role'>{user.role}</span>
-                  </p>
-                  <div className='controls'>
-                    <Link to='/users/edit'>
-                      <i className='fas fa-edit'></i>
-                    </Link>
-                    <Link to='/users/delete'>
-                      <i className='fas fa-trash-alt'></i>
-                    </Link>
-                  </div>
-                </div>
-              ))}
-          </div>
+          <Fragment>
+            {users !== null && !usersLoading ? (
+              <TransitionGroup>
+                {filteredUsers ? (
+                  <UsersList users={filteredUsers} />
+                ) : (
+                  <UsersList users={users} />
+                )}
+              </TransitionGroup>
+            ) : (
+              <div className='spinner-wrapper'>
+                <Spinner text={'Loading users...'} size={'medium'} />
+              </div>
+            )}
+          </Fragment>
         </div>
       </div>
     </Fragment>
@@ -63,9 +96,19 @@ const Users = ({ fetchUsers, users }) => {
 };
 
 const mapStateToProps = (state) => {
+  const { currentUser } = state.auth;
+  const { users, filteredUsers, usersLoading } = state.users;
+
   return {
-    users: state.users.users,
+    currentUser,
+    users,
+    filteredUsers,
+    usersLoading,
   };
 };
 
-export default connect(mapStateToProps, { fetchUsers })(Users);
+export default connect(mapStateToProps, {
+  fetchUsers,
+  filterUsers,
+  clearFilteredUsers,
+})(Users);
