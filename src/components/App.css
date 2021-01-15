@@ -65,6 +65,10 @@ button:hover {
   right: -5px;
 }
 
+.header-label {
+  display: inline !important;
+}
+
 /* **** Main Header */
 .main-header {
   height: 60px;

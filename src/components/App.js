@@ -10,7 +10,6 @@ import RoomCreate from './pages/RoomCreate';
 import Facilities from './pages/Facilities';
 import FacilityEdit from './pages/FacilityEdit';
 import PrivateRoute from '../components/routing/PrivateRoute';
-import FacilityDetail from './pages/FacilityDetail';
 import history from '../utils/history';
 
 export class App extends Component {
@@ -24,11 +23,6 @@ export class App extends Component {
           <PrivateRoute path='/users/new' exact component={UserCreate} />
           <PrivateRoute path='/facilities' exact component={Facilities} />
           <PrivateRoute path='/facilities/new' exact component={FacilityEdit} />
-          <PrivateRoute
-            path='/facilities/:facilityId'
-            exact
-            component={FacilityDetail}
-          />
           <PrivateRoute
             path='/facilities/:facilityId/edit'
             exact

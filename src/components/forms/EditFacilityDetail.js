@@ -141,7 +141,6 @@ export class EditFacilityDetail extends Component {
             name='location.coordinates'
             component={this.renderLocation}
           />
-
           <Field
             name='address'
             type='text'
@@ -203,6 +202,8 @@ const validate = (formValues) => {
 
 const mapStateToProps = (state, ownProps) => {
   const { facilitiesLoading } = state.facilities;
+
+  console.log('CurrentFacility: ', ownProps.currentFacility);
 
   return {
     facilitiesLoading,

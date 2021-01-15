@@ -5,6 +5,16 @@ import { CSSTransition } from 'react-transition-group';
 import { deleteFacility } from '../../actions/facilities';
 
 const FacilitiesList = ({ facilities, facilitiesLoading, deleteFacility }) => {
+  const onDeleteFacility = (facility) => {
+    const shouldDeleteFacility = window.confirm(
+      `Are you sure you want to delete ${facility.name}`
+    );
+
+    if (shouldDeleteFacility) {
+      deleteFacility(facility._id);
+    }
+  };
+
   return (
     <div className='ui relaxed divided list facilities-list'>
       {facilities &&
@@ -12,7 +22,10 @@ const FacilitiesList = ({ facilities, facilitiesLoading, deleteFacility }) => {
           <CSSTransition key={facility._id} timeout={500} classNames='item'>
             <div className='item'>
               <div className='content'>
-                <Link className='header' to={`/facilities/${facility._id}`}>
+                <Link
+                  className='header'
+                  to={`/facilities/${facility._id}/edit`}
+                >
                   {facility.name} |{' '}
                   <span className='user-role'>{facility.category}</span>
                 </Link>
@@ -20,18 +33,8 @@ const FacilitiesList = ({ facilities, facilitiesLoading, deleteFacility }) => {
                   <div className='wrapper'>
                     <div className='text'>{facility.description}</div>
                     <div className='controls'>
-                      <Link
-                        style={{ marginRight: '.75rem' }}
-                        to={`/facilities/${facility._id}/edit`}
-                      >
-                        <i className='icon fa-edit'></i>
-                      </Link>
-
                       {!facilitiesLoading ? (
-                        <a
-                          href='#!'
-                          onClick={() => deleteFacility(facility._id)}
-                        >
+                        <a href='#!' onClick={() => onDeleteFacility(facility)}>
                           <i className='icon fa-trash-alt'></i>
                         </a>
                       ) : (

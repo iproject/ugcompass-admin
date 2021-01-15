@@ -1,7 +1,6 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import { reduxForm, Field } from 'redux-form';
-
 export class EditFacilityPhotos extends Component {
   componentDidMount() {
     const isEditing = window.location.pathname.split('/')[3];

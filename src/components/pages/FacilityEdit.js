@@ -7,7 +7,6 @@ import EditFacilityPhotos from '../forms/EditFacilityPhotos';
 import EditFacilityWorkingHours from '../forms/EditFacilityWorkingHours';
 import Sidebar from '../layout/LeftSidebar';
 import Navbar from '../layout/MainNavbar';
-import Spinner from '../layout/Spinner';
 import {
   createFacility,
   fetchFacility,
@@ -47,6 +46,10 @@ class FacilityEdit extends Component {
     }
   };
 
+  componentWillUnmount() {
+    window.onbeforeunload = () => false;
+  }
+
   shouldBlockNavigation = () => {
     this.setState({ isDirty: this.props.isDirty });
     return this.state.isDirty;
@@ -68,7 +71,7 @@ class FacilityEdit extends Component {
   onSubmit = (formValues) => {
     if (this.facilityId) {
       this.props.updateFacility(formValues, this.facilityId);
-      clearCurrentFacility();
+      this.props.clearCurrentFacility();
     } else {
       this.props.createFacility(formValues);
     }
@@ -149,6 +152,7 @@ class FacilityEdit extends Component {
                     <EditFacilityPhotos
                       previousPage={this.previousPage}
                       onSubmit={this.onSubmit}
+                      disableNavigationBlocking={this.disableNavigationBlocking}
                     />
                   )}
                 </>

@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 const Spinner = ({ padding, text, size }) => {
   return (
     <div className='spinner-wrapper' style={{ padding: padding + 'rem' }}>
-      <div class={`ui active text loader ${size}`}>{text}</div>
+      <div className={`ui active text loader ${size}`}>{text}</div>
     </div>
   );
 };

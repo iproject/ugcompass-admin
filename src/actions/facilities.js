@@ -69,16 +69,12 @@ export const updateFacility = (formValues, facilityId) => async (
 ) => {
   getState().facilities.facilitiesLoading = true;
   try {
-    const { data } = await ugCompass.put(
-      `/facilities/${facilityId}`,
-      formValues,
-      {
-        headers: {
-          Authorization: localStorage.ugcompass_token,
-          'Content-Type': 'application/json',
-        },
-      }
-    );
+    await ugCompass.put(`/facilities/${facilityId}`, formValues, {
+      headers: {
+        Authorization: localStorage.ugcompass_token,
+        'Content-Type': 'application/json',
+      },
+    });
     dispatch(reset('facilityform'));
     history.push('/facilities');
   } catch (err) {
@@ -129,15 +125,12 @@ export const filterFacilities = (queryStr) => (dispatch, getState) => {
       facilities: getState().facilities.facilities,
     },
   });
-  // Todo: Handle Errors
 };
 
 export const clearFilteredFacilities = () => ({
   type: CLEAR_FILTERED_FACILITIES,
-  // Todo: Handle Errors
 });
 
 export const clearCurrentFacility = () => ({
   type: CLEAR_CURRENT_FACILITY,
-  // Todo: Handle Errors
 });
