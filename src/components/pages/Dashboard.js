@@ -25,6 +25,8 @@ export const Dashboard = (props) => {
     facilitiesLoading,
     roomsLoading,
     users,
+    facilities,
+    rooms,
     numberOfUsers,
     numberOfRooms,
     numberOfFacilities,
@@ -33,11 +35,13 @@ export const Dashboard = (props) => {
   useEffect(() => {
     if (!currentUser) loadUser();
     fetchRooms();
+    if (currentUser) {
+      if (currentUser.role === 'admin') fetchUsers();
+    }
     fetchFacilities();
     fetchTopFacilities();
-    fetchUsers();
     // eslint-disable-next-line
-  }, []);
+  }, [currentUser]);
 
   return (
     <Fragment>
@@ -57,6 +61,8 @@ export const Dashboard = (props) => {
                 numberOfUsers={numberOfUsers}
                 numberOfRooms={numberOfRooms}
                 users={users}
+                facilities={facilities}
+                rooms={rooms}
               />
 
               <TopFacilities

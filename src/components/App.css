@@ -28,18 +28,6 @@ button:hover {
   list-style: none;
 }
 
-.success {
-  color: green;
-  border: 1px solid green;
-  background: lightgreen;
-}
-
-.error {
-  color: red;
-  border: 1px solid red;
-  background: rgb(245, 178, 178);
-}
-
 .forgot-password {
   margin-top: 1rem !important;
 }

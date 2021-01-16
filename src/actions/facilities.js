@@ -77,7 +77,7 @@ export const createFacility = (formValues) => async (dispatch, getState) => {
       type: CREATE_FACILITY_SUCCESS,
       payload: { facilities: getState().facilities.facilities, facility },
     });
-    dispatch(reset('facilityform'));
+    dispatch(reset('facilityForm'));
     history.push('/facilities');
   } catch (err) {
     console.log(err);
@@ -97,7 +97,7 @@ export const updateFacility = (formValues, facilityId) => async (
         'Content-Type': 'application/json',
       },
     });
-    dispatch(reset('facilityform'));
+    dispatch(reset('facilityForm'));
     history.push('/facilities');
   } catch (err) {
     console.log(err);
@@ -153,6 +153,10 @@ export const clearFilteredFacilities = () => ({
   type: CLEAR_FILTERED_FACILITIES,
 });
 
-export const clearCurrentFacility = () => ({
-  type: CLEAR_CURRENT_FACILITY,
-});
+export const clearCurrentFacility = () => (dispatch) => {
+  dispatch(reset('facilityForm'));
+
+  dispatch({
+    type: CLEAR_CURRENT_FACILITY,
+  });
+};

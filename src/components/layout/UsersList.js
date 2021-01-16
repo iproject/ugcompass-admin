@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { CSSTransition } from 'react-transition-group';
-import { Button, Icon, Image, List } from 'semantic-ui-react';
+import { Button, Icon, List } from 'semantic-ui-react';
 import { deleteUser } from '../../actions/users';
 
 const UsersList = ({ users, usersLoading, deleteUser, currentUser }) => {
@@ -23,9 +23,17 @@ const UsersList = ({ users, usersLoading, deleteUser, currentUser }) => {
           <CSSTransition key={user._id} timeout={500} classNames='item'>
             <List.Item>
               {currentUser.role === 'admin' && (
-                <List.Content floated='right'>
-                  <Button size='tiny'>Delete</Button>
-                </List.Content>
+                <Fragment>
+                  {!usersLoading ? (
+                    <List.Content floated='right'>
+                      <Button size='tiny' onClick={() => onDeleteUser(user)}>
+                        Delete
+                      </Button>
+                    </List.Content>
+                  ) : (
+                    <div className='ui active tiny inline loader'></div>
+                  )}
+                </Fragment>
               )}
               <Icon name='user' size='large' />
 
@@ -44,23 +52,6 @@ const UsersList = ({ users, usersLoading, deleteUser, currentUser }) => {
                 </Link>
               </List.Content>
             </List.Item>
-
-            {/* <div className='item'>
-              <div className='content'>
-                <Link className='header' to={`/users/${user._id}/edit`}>
-                  {user.name} | <span className='user-role'>{user.role}</span>
-                </Link>
-                <div className='controls'>
-                  {!usersLoading ? (
-                    <a href='#!' onClick={() => onDeleteUser(user)}>
-                      <i className='icon fa-trash-alt'></i>
-                    </a>
-                  ) : (
-                    <div class='ui active tiny inline loader'></div>
-                  )}
-                </div>
-              </div>
-            </div> */}
           </CSSTransition>
         ))}
     </List>

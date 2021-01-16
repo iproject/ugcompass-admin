@@ -48,6 +48,8 @@ class FacilityEdit extends Component {
 
   componentWillUnmount() {
     window.onbeforeunload = () => false;
+    this.props.clearCurrentFacility();
+    console.log('Facility cleared...');
   }
 
   shouldBlockNavigation = () => {

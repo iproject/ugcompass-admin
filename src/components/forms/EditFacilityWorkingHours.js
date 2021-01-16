@@ -128,7 +128,7 @@ const validate = (formValues) => {
 };
 
 export default reduxForm({
-  form: 'facilityform', // <------ same form name
+  form: 'facilityForm', // <------ same form name
   destroyOnUnmount: false, // <------ preserve form data
   forceUnregisterOnUnmount: true, // <------ unregister fields on unmount
   enableReinitialize: true,

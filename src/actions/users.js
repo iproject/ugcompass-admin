@@ -45,7 +45,7 @@ export const fetchUser = (userId) => async (dispatch, getState) => {
   }
 };
 
-export const createUsers = (formValues) => async (dispatch, getState) => {
+export const createUser = (formValues) => async (dispatch, getState) => {
   getState().users.usersLoading = true;
   try {
     const user = await ugCompass.post('/users', formValues, {
@@ -58,7 +58,7 @@ export const createUsers = (formValues) => async (dispatch, getState) => {
       type: CREATE_USER_SUCCESS,
       payload: { users: getState().users.users, user },
     });
-    dispatch(reset('userform'));
+    dispatch(reset('userForm'));
     history.push('/users');
   } catch (err) {
     console.log(err);
@@ -66,7 +66,7 @@ export const createUsers = (formValues) => async (dispatch, getState) => {
   }
 };
 
-export const updateUsers = (formValues, userId) => async (
+export const updateUser = (formValues, userId) => async (
   dispatch,
   getState
 ) => {
@@ -78,7 +78,7 @@ export const updateUsers = (formValues, userId) => async (
         'Content-Type': 'application/json',
       },
     });
-    dispatch(reset('userform'));
+    dispatch(reset('userForm'));
     history.push('/users');
   } catch (err) {
     console.log(err);
@@ -114,10 +114,12 @@ export const filterUsers = (queryStr) => (dispatch, getState) => {
   });
 };
 
+export const clearCurrentUser = () => (dispatch) => {
+  dispatch(reset('userForm'));
+
+  dispatch({ type: CLEAR_CURRENT_USER });
+};
+
 export const clearFilteredUsers = () => ({
   type: CLEAR_FILTERED_USERS,
-});
-
-export const clearCurrentUsers = () => ({
-  type: CLEAR_CURRENT_USER,
 });

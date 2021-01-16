@@ -71,7 +71,7 @@ const Users = (props) => {
               </div>
             </form>
             <Link className='ui primary small button' to='/users/new'>
-              Add Room
+              Add User
             </Link>
           </div>
           <Fragment>

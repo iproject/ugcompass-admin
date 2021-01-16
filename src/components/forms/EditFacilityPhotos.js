@@ -5,7 +5,6 @@ export class EditFacilityPhotos extends Component {
   componentDidMount() {
     const isEditing = window.location.pathname.split('/')[3];
     if (isEditing === 'edit') this.isEditing = isEditing;
-    console.log(this.isEditing);
   }
 
   render() {
@@ -38,7 +37,7 @@ export class EditFacilityPhotos extends Component {
               <input
                 type='file'
                 name='roomPhoto'
-                id='PhotoR'
+                id='Photo'
                 className='form-control'
                 stxyle='display: none'
               />
@@ -62,7 +61,7 @@ export class EditFacilityPhotos extends Component {
               }`}
               style={{ marginTop: '1rem' }}
               type='submit'
-              // disabled={pristine || submitting}
+              disabled={pristine || submitting}
             >
               {this.isEditing ? 'Update Facility' : 'Add Facility'}
             </button>
@@ -76,14 +75,15 @@ export class EditFacilityPhotos extends Component {
 const mapStateToProps = (state) => {
   return {
     facilitiesLoading: state.facilities.facilitiesLoading,
+    // initialValues: { photo: [] }, // ! Find another way to implement this because it overwrites changes made to the form
   };
 };
 
 const formWrapper = reduxForm({
-  form: 'facilityform', // <------ same form name
-  initialValues: { photo: [] },
+  form: 'facilityForm', // <------ same form name
   destroyOnUnmount: false, // <------ preserve form data
   forceUnregisterOnUnmount: true, // <------ unregister fields on unmount
+  updateUnregisteredFields: true,
   enableReinitialize: true,
   keepDirtyOnReinitialize: true,
 })(EditFacilityPhotos);

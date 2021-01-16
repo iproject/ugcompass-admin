@@ -4,7 +4,7 @@ import { Router, Route, Switch } from 'react-router-dom';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
 import Users from './pages/Users';
-import UserCreate from './pages/UserCreate';
+import UserEdit from './pages/UserEdit';
 import Rooms from './pages/Rooms';
 import RoomCreate from './pages/RoomCreate';
 import Facilities from './pages/Facilities';
@@ -20,7 +20,8 @@ export class App extends Component {
           <Route path='/login' exact component={Login} />
           <PrivateRoute path='/' exact component={Dashboard} />
           <PrivateRoute path='/users' exact component={Users} />
-          <PrivateRoute path='/users/new' exact component={UserCreate} />
+          <PrivateRoute path='/users/new' exact component={UserEdit} />
+          <PrivateRoute path='/users/:userId/edit' exact component={UserEdit} />
           <PrivateRoute path='/facilities' exact component={Facilities} />
           <PrivateRoute path='/facilities/new' exact component={FacilityEdit} />
           <PrivateRoute

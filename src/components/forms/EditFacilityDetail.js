@@ -71,7 +71,9 @@ export class EditFacilityDetail extends Component {
     return (
       <div className='container ui'>
         <form
-          className='ui form edit-facility-detail-form'
+          className={`ui form ${
+            facilitiesLoading && 'loading'
+          } error edit-facility-detail-form`}
           onSubmit={handleSubmit}
         >
           <h3 className='ui dividing header'>Edit Facility Information</h3>
@@ -170,9 +172,9 @@ export class EditFacilityDetail extends Component {
             placeholder='Enter phone of facility'
           />
 
-          <div>
+          <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
             <button
-              className='ui right labeled floated icon button black'
+              className='ui right labeled icon button black'
               style={{ marginTop: '1rem' }}
               type='submit'
             >
@@ -219,7 +221,7 @@ const mapStateToProps = (state, ownProps) => {
 };
 
 const formWrapper = reduxForm({
-  form: 'facilityform', // <------ same form name
+  form: 'facilityForm', // <------ same form name
   destroyOnUnmount: false, // <------ preserve form data
   forceUnregisterOnUnmount: false, // <------ unregister fields on unmount
   updateUnregisteredFields: true,

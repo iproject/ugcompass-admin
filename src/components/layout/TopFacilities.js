@@ -4,7 +4,6 @@ import { Rating } from 'semantic-ui-react';
 
 const TopFacilities = ({ topFacilities, facilitiesLoading }) => {
   const renderTopFacilities = () => {
-    console.log(topFacilities);
     return topFacilities.map((facility, index) => {
       let position;
       if (index === 0) {
@@ -37,6 +36,9 @@ const TopFacilities = ({ topFacilities, facilitiesLoading }) => {
               maxRating={5}
               disabled
             />
+            <span style={{ marginLeft: '.5rem', fontWeight: 'bold' }}>
+              {Math.ceil(facility.averageRating / 2)}
+            </span>
           </div>
         </div>
       );
@@ -51,7 +53,7 @@ const TopFacilities = ({ topFacilities, facilitiesLoading }) => {
         renderTopFacilities()
       ) : (
         <div className='ui segment'>
-          <Spinner padding={4} text='Loading top facilities...' />
+          <Spinner padding='4' text='Loading top facilities...' />
         </div>
       )}
     </Fragment>
