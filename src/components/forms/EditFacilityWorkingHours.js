@@ -26,14 +26,14 @@ export class EditFacilityWorkingHours extends Component {
     return (
       <>
         {fields.map((hour, index) => (
-          <Fragment>
+          <Fragment key={index}>
             <div className='ui segment working-hour-field' key={index}>
               <button
-                class='ui tiny circular light icon button delete-btn'
+                className='ui tiny circular light icon button delete-btn'
                 type='button'
                 onClick={() => fields.remove(index)}
               >
-                <i class='trash icon'></i>
+                <i className='trash icon'></i>
               </button>
 
               <div className='three fields'>
@@ -68,6 +68,7 @@ export class EditFacilityWorkingHours extends Component {
             </div>
           </Fragment>
         ))}
+
         <button
           className='ui button primary'
           type='button'

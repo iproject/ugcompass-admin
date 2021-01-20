@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
-import { reduxForm, FieldArray, Field } from 'redux-form';
+import { reduxForm, FieldArray, Field, isDirty } from 'redux-form';
 
 export class EditFacilityDetail extends Component {
   renderField = ({
@@ -203,15 +203,14 @@ const validate = (formValues) => {
 };
 
 const mapStateToProps = (state, ownProps) => {
-  const { facilitiesLoading } = state.facilities;
-
-  console.log('CurrentFacility: ', ownProps.currentFacility);
+  const { facilitiesLoading, currentFacility } = state.facilities;
 
   return {
     facilitiesLoading,
+    isDirty: isDirty('facilityForm')(state),
     initialValues:
-      ownProps.currentFacility !== null
-        ? ownProps.currentFacility
+      currentFacility !== null
+        ? currentFacility
         : {
             location: {
               coordinates: [-1, 1],
@@ -224,7 +223,6 @@ const formWrapper = reduxForm({
   form: 'facilityForm', // <------ same form name
   destroyOnUnmount: false, // <------ preserve form data
   forceUnregisterOnUnmount: false, // <------ unregister fields on unmount
-  updateUnregisteredFields: true,
   enableReinitialize: true,
   keepDirtyOnReinitialize: true,
   validate,

@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { Field, reduxForm } from 'redux-form';
+import { Field, reduxForm, isDirty } from 'redux-form';
 import Navbar from '../layout/MainNavbar';
 import Sidebar from '../layout/LeftSidebar';
 import {
@@ -21,7 +21,7 @@ class UserEdit extends Component {
   }
 
   componentWillUnmount() {
-    // this.props.clearCurrentUser();
+    this.props.clearCurrentUser();
   }
 
   renderError({ touched, error }) {
@@ -68,7 +68,7 @@ class UserEdit extends Component {
   };
 
   render() {
-    const { usersLoading } = this.props;
+    const { usersLoading, isFormDirty } = this.props;
 
     return (
       <Fragment>
@@ -77,16 +77,26 @@ class UserEdit extends Component {
           <div className='admin-wrapper'>
             <Sidebar />
             <div className='admin-content'>
-              <div>
+              <div style={{ marginBottom: '1.5rem' }}>
                 <Link
                   className='ui left labeled tiny icon button '
-                  style={{ marginTop: '-2rem', marginBottom: '1rem' }}
                   type='button'
                   to='/users'
                 >
                   <i className='left arrow icon'></i>
                   Back To List
                 </Link>
+                {isFormDirty && (
+                  <span
+                    style={{
+                      marginLeft: '1rem',
+                      color: 'orange',
+                      fontWeight: 'bold',
+                    }}
+                  >
+                    Change(s) Detected
+                  </span>
+                )}
               </div>
 
               <div className='container ui'>
@@ -193,6 +203,7 @@ const mapStateToProps = (state) => {
   const { usersLoading, currentUser } = state.users; // * Current user is the fetchedUser
 
   return {
+    isFormDirty: isDirty('userForm')(state),
     usersLoading,
     fetchedUser: currentUser,
     initialValues: currentUser ? currentUser : null,

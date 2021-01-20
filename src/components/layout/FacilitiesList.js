@@ -2,9 +2,14 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { CSSTransition } from 'react-transition-group';
-import { deleteFacility } from '../../actions/facilities';
+import { deleteFacility, setCurrentFacility } from '../../actions/facilities';
 
-const FacilitiesList = ({ facilities, facilitiesLoading, deleteFacility }) => {
+const FacilitiesList = ({
+  facilities,
+  facilitiesLoading,
+  deleteFacility,
+  setCurrentFacility,
+}) => {
   const onDeleteFacility = (facility) => {
     const shouldDeleteFacility = window.confirm(
       `Are you sure you want to delete ${facility.name}`
@@ -25,8 +30,10 @@ const FacilitiesList = ({ facilities, facilitiesLoading, deleteFacility }) => {
                 <Link
                   className='header'
                   to={`/facilities/${facility._id}/edit`}
+                  onClick={() => setCurrentFacility(facility)}
                 >
-                  {facility.name} |{' '}
+                  {facility.name}
+                  <span className='seperator'>|</span>
                   <span className='user-role'>{facility.category}</span>
                 </Link>
                 <div className='description'>
@@ -57,4 +64,6 @@ const mapStateToProps = (state) => {
   };
 };
 
-export default connect(mapStateToProps, { deleteFacility })(FacilitiesList);
+export default connect(mapStateToProps, { deleteFacility, setCurrentFacility })(
+  FacilitiesList
+);

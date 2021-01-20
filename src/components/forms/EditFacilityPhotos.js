@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
-import { reduxForm, Field } from 'redux-form';
+import { reduxForm } from 'redux-form';
 export class EditFacilityPhotos extends Component {
   componentDidMount() {
     const isEditing = window.location.pathname.split('/')[3];
@@ -13,6 +13,7 @@ export class EditFacilityPhotos extends Component {
       pristine,
       previousPage,
       submitting,
+      currentFacility,
       facilitiesLoading,
     } = this.props;
 
@@ -56,14 +57,14 @@ export class EditFacilityPhotos extends Component {
             </button>
 
             <button
-              className={`ui right right floated icon button green ${
+              className={`ui right floated icon button green ${
                 facilitiesLoading ? 'loading' : null
               }`}
               style={{ marginTop: '1rem' }}
               type='submit'
-              disabled={pristine || submitting}
+              // disabled={pristine || submitting}
             >
-              {this.isEditing ? 'Update Facility' : 'Add Facility'}
+              {currentFacility ? 'Update Facility' : 'Add Facility'}
             </button>
           </div>
         </form>
@@ -73,8 +74,11 @@ export class EditFacilityPhotos extends Component {
 }
 
 const mapStateToProps = (state) => {
+  const { facilitiesLoading, currentFacility } = state.facilities;
+
   return {
-    facilitiesLoading: state.facilities.facilitiesLoading,
+    facilitiesLoading,
+    currentFacility,
     // initialValues: { photo: [] }, // ! Find another way to implement this because it overwrites changes made to the form
   };
 };
@@ -83,7 +87,6 @@ const formWrapper = reduxForm({
   form: 'facilityForm', // <------ same form name
   destroyOnUnmount: false, // <------ preserve form data
   forceUnregisterOnUnmount: true, // <------ unregister fields on unmount
-  updateUnregisteredFields: true,
   enableReinitialize: true,
   keepDirtyOnReinitialize: true,
 })(EditFacilityPhotos);

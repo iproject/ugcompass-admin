@@ -9,7 +9,9 @@ import {
   DELETE_FACILITY_SUCCESS,
   SEARCH_FACILITIES_SUCCESS,
   FILTER_FACILITIES,
+  SET_CURRENT_FACILITY,
   CLEAR_FILTERED_FACILITIES,
+  CLEAR_FACILITY_FORM_DATA,
   CLEAR_CURRENT_FACILITY,
 } from '../actions/types';
 
@@ -153,9 +155,19 @@ export const clearFilteredFacilities = () => ({
   type: CLEAR_FILTERED_FACILITIES,
 });
 
+export const setCurrentFacility = (facility) => (dispatch) => {
+  dispatch(reset('facilityForm'));
+
+  dispatch({
+    type: SET_CURRENT_FACILITY,
+    payload: facility,
+  });
+};
+
 export const clearCurrentFacility = () => (dispatch) => {
   dispatch(reset('facilityForm'));
 
+  // dispatch({ type: CLEAR_FACILITY_FORM_DATA });
   dispatch({
     type: CLEAR_CURRENT_FACILITY,
   });

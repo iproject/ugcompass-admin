@@ -1,7 +1,7 @@
-import React, { Component, Fragment } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { Link, Prompt } from 'react-router-dom';
-import { isDirty } from 'redux-form';
+import { isDirty, reduxForm } from 'redux-form';
 import EditFacilityDetail from '../forms/EditFacilityDetail';
 import EditFacilityPhotos from '../forms/EditFacilityPhotos';
 import EditFacilityWorkingHours from '../forms/EditFacilityWorkingHours';
@@ -14,172 +14,169 @@ import {
   clearCurrentFacility,
 } from '../../actions/facilities';
 
-class FacilityEdit extends Component {
-  constructor(props) {
-    super(props);
-    this.nextPage = this.nextPage.bind(this);
-    this.previousPage = this.previousPage.bind(this);
-    this.state = {
-      page: 1,
-      isBlocking: this.props.isDirty,
-    };
-  }
+const FacilityEdit = (props) => {
+  const {
+    isFormDirty,
+    updateFacility,
+    clearCurrentFacility,
+    createFacility,
+    currentFacility,
+    facilitiesLoading,
+  } = props;
 
-  componentDidMount() {
-    this.facilityId = this.props.match.params.facilityId;
+  const [page, setPage] = useState(1);
+  const [isBlocking, setBlocking] = useState(isFormDirty);
 
-    if (this.facilityId) {
-      this.props.fetchFacility(this.facilityId);
-    }
-  }
-
-  componentDidUpdate = (prevProps) => {
-    // Update navigation blocking state
-    if (this.props.isDirty !== prevProps.isDirty) {
-      this.setState({ isBlocking: this.props.isDirty });
-    }
-    // Prevent navigation if form is not saved
-    if (this.state.isBlocking) {
+  useEffect(() => {
+    setBlocking(isFormDirty);
+    if (isBlocking) {
       window.onbeforeunload = () => true;
     } else {
-      window.onbeforeunload = () => undefined;
+      window.onbeforeunload = undefined;
     }
+    // eslint-disable-next-line
+  });
+
+  // Set is blocking to false first time doc load
+  useEffect(() => {
+    setBlocking(false);
+
+    // eslint-disable-next-line
+  }, []);
+
+  const disableNavigationBlocking = () => {
+    setBlocking(false);
   };
 
-  componentWillUnmount() {
-    window.onbeforeunload = () => false;
-    this.props.clearCurrentFacility();
-    console.log('Facility cleared...');
-  }
-
-  shouldBlockNavigation = () => {
-    this.setState({ isDirty: this.props.isDirty });
-    return this.state.isDirty;
+  const nextPage = () => {
+    setPage(page + 1);
   };
 
-  disableNavigationBlocking = () => {
-    this.setState({ isBlocking: false });
+  const previousPage = () => {
+    setPage(page - 1);
   };
-
-  nextPage() {
-    this.setState({ page: this.state.page + 1 });
-  }
-
-  previousPage() {
-    this.setState({ page: this.state.page - 1 });
-  }
 
   // on wizard form submission
-  onSubmit = (formValues) => {
-    if (this.facilityId) {
-      this.props.updateFacility(formValues, this.facilityId);
-      this.props.clearCurrentFacility();
+  const onSubmit = (formValues) => {
+    if (props.match.params.facilityId) {
+      updateFacility(formValues, currentFacility._id);
     } else {
-      this.props.createFacility(formValues);
+      createFacility(formValues);
     }
+    clearCurrentFacility();
   };
 
-  render() {
-    const { currentFacility, facilitiesLoading, isDirty } = this.props;
-    const { page, isBlocking } = this.state;
-
-    return (
-      <Fragment>
-        <Navbar />
-        <div className='admin-wrapper'>
-          <Sidebar />
-          <div className='admin-content'>
-            <div>
-              <Link
-                className='ui left labeled tiny icon button '
-                style={{ marginTop: '-2rem', marginBottom: '1rem' }}
-                type='button'
-                to='/facilities'
+  return (
+    <Fragment>
+      <Navbar />
+      <div className='admin-wrapper'>
+        <Sidebar />
+        <div className='admin-content'>
+          <div style={{ marginTop: '0rem', marginBottom: '1rem' }}>
+            <Link
+              className='ui left labeled tiny icon button '
+              type='button'
+              to='/facilities'
+            >
+              <i className='left arrow icon'></i>
+              Back To List
+            </Link>
+            {isBlocking && (
+              <span
+                style={{
+                  marginLeft: '1rem',
+                  color: 'orange',
+                  fontWeight: 'bold',
+                }}
               >
-                <i className='left arrow icon'></i>
-                Back To List
-              </Link>
-              {isDirty && (
-                <span
-                  style={{
-                    marginLeft: '1rem',
-                    color: 'orange',
-                    fontWeight: 'bold',
-                  }}
-                >
-                  Change(s) Detected
-                </span>
-              )}
-              <Prompt
-                when={isBlocking}
-                message='You have unsaved changes, are you sure you want to leave?'
-              />
-            </div>
-
-            <Fragment>
-              {currentFacility && !facilitiesLoading ? (
-                <Fragment>
-                  {page === 1 && (
-                    <EditFacilityDetail
-                      currentFacility={currentFacility}
-                      onSubmit={this.nextPage}
-                    />
-                  )}
-                  {page === 2 && (
-                    <EditFacilityWorkingHours
-                      previousPage={this.previousPage}
-                      onSubmit={this.nextPage}
-                    />
-                  )}
-                  {page === 3 && (
-                    <EditFacilityPhotos
-                      previousPage={this.previousPage}
-                      onSubmit={this.onSubmit}
-                      disableNavigationBlocking={this.disableNavigationBlocking}
-                    />
-                  )}
-                </Fragment>
-              ) : (
-                <>
-                  {page === 1 && (
-                    <EditFacilityDetail onSubmit={this.nextPage} />
-                  )}
-                  {page === 2 && (
-                    <EditFacilityWorkingHours
-                      previousPage={this.previousPage}
-                      onSubmit={this.nextPage}
-                    />
-                  )}
-                  {page === 3 && (
-                    <EditFacilityPhotos
-                      previousPage={this.previousPage}
-                      onSubmit={this.onSubmit}
-                      disableNavigationBlocking={this.disableNavigationBlocking}
-                    />
-                  )}
-                </>
-              )}
-            </Fragment>
+                Change(s) Detected
+              </span>
+            )}
+            <Prompt
+              when={isBlocking}
+              message='You have unsaved changes, are you sure you want to leave?'
+            />
+            <button
+              className='ui right floated button red tiny'
+              type='button'
+              onClick={() => clearCurrentFacility()}
+            >
+              Clear Form
+            </button>
           </div>
+
+          <Fragment>
+            {currentFacility && !facilitiesLoading ? (
+              <Fragment>
+                {page === 1 && (
+                  <EditFacilityDetail
+                    currentFacility={currentFacility}
+                    clearCurrentFacility={clearCurrentFacility}
+                    onSubmit={nextPage}
+                  />
+                )}
+                {page === 2 && (
+                  <EditFacilityWorkingHours
+                    previousPage={previousPage}
+                    onSubmit={nextPage}
+                  />
+                )}
+                {page === 3 && (
+                  <EditFacilityPhotos
+                    previousPage={previousPage}
+                    onSubmit={onSubmit}
+                    disableNavigationBlocking={disableNavigationBlocking}
+                  />
+                )}
+              </Fragment>
+            ) : (
+              <>
+                {page === 1 && (
+                  <EditFacilityDetail
+                    onSubmit={nextPage}
+                    clearCurrentFacility={clearCurrentFacility}
+                  />
+                )}
+                {page === 2 && (
+                  <EditFacilityWorkingHours
+                    previousPage={previousPage}
+                    onSubmit={nextPage}
+                  />
+                )}
+                {page === 3 && (
+                  <EditFacilityPhotos
+                    previousPage={previousPage}
+                    onSubmit={onSubmit}
+                    disableNavigationBlocking={disableNavigationBlocking}
+                  />
+                )}
+              </>
+            )}
+          </Fragment>
         </div>
-      </Fragment>
-    );
-  }
-}
+      </div>
+    </Fragment>
+  );
+};
 
 const mapStateToProps = (state) => {
   const { currentFacility, facilitiesLoading } = state.facilities;
-
   return {
-    isDirty: isDirty('facilityform')(state),
+    isFormDirty: isDirty('facilityForm')(state),
     currentFacility,
     facilitiesLoading,
   };
 };
+
+const formWrapper = reduxForm({
+  form: 'facilityForm', // <------ same form name
+  enableReinitialize: true,
+  keepDirtyOnReinitialize: true,
+})(FacilityEdit);
 
 export default connect(mapStateToProps, {
   createFacility,
   fetchFacility,
   updateFacility,
   clearCurrentFacility,
-})(FacilityEdit);
+})(formWrapper);

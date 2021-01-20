@@ -8,6 +8,7 @@ import {
   CLEAR_CURRENT_FACILITY,
   CLEAR_FILTERED_FACILITIES,
   FILTER_FACILITIES,
+  SET_CURRENT_FACILITY,
 } from '../actions/types';
 
 const initialState = {
@@ -83,6 +84,13 @@ const facilitiesReducer = (state = initialState, { type, payload }) => {
         ...state,
         filteredFacilities: null,
         facilitiesLoading: false,
+      };
+
+    case SET_CURRENT_FACILITY:
+      return {
+        ...state,
+        currentFacility: payload,
+        facilityLoading: false,
       };
 
     case CLEAR_CURRENT_FACILITY:
