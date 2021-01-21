@@ -9,6 +9,7 @@ import {
   SEARCH_ROOMS_SUCCESS,
   FILTER_ROOMS,
   CLEAR_FILTERED_ROOMS,
+  SET_CURRENT_ROOM,
   CLEAR_CURRENT_ROOM,
 } from '../actions/types';
 
@@ -42,20 +43,27 @@ export const fetchRoom = (roomId) => async (dispatch, getState) => {
   }
 };
 
-export const createRoom = (formValues) => async (dispatch, getState) => {
+export const createRoom = (formValues, facilityId) => async (
+  dispatch,
+  getState
+) => {
   getState().rooms.roomsLoading = true;
   try {
-    const facility = await ugCompass.post('/rooms', formValues, {
-      headers: {
-        Authorization: localStorage.ugcompass_token,
-        'Content-Type': 'application/json',
-      },
-    });
+    const room = await ugCompass.post(
+      `/facilities/${facilityId}/rooms`,
+      formValues,
+      {
+        headers: {
+          Authorization: localStorage.ugcompass_token,
+          'Content-Type': 'application/json',
+        },
+      }
+    );
     dispatch({
       type: CREATE_ROOM_SUCCESS,
-      payload: { rooms: getState().rooms.rooms, facility },
+      payload: { rooms: getState().rooms.rooms, room },
     });
-    dispatch(reset('facilityform'));
+    dispatch(reset('roomForm'));
     history.push('/rooms');
   } catch (err) {
     console.log(err);
@@ -75,7 +83,7 @@ export const updateRoom = (formValues, roomId) => async (
         'Content-Type': 'application/json',
       },
     });
-    dispatch(reset('facilityform'));
+    dispatch(reset('roomForm'));
     history.push('/rooms');
   } catch (err) {
     console.log(err);
@@ -131,6 +139,19 @@ export const clearFilteredRooms = () => ({
   type: CLEAR_FILTERED_ROOMS,
 });
 
-export const clearCurrentRoom = () => ({
-  type: CLEAR_CURRENT_ROOM,
-});
+export const setCurrentRoom = (room) => (dispatch) => {
+  dispatch(reset('roomForm'));
+
+  dispatch({
+    type: SET_CURRENT_ROOM,
+    payload: room,
+  });
+};
+
+export const clearCurrentRoom = () => (dispatch) => {
+  dispatch(reset('roomForm'));
+
+  dispatch({
+    type: CLEAR_CURRENT_ROOM,
+  });
+};

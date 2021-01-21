@@ -6,7 +6,7 @@ import Dashboard from './pages/Dashboard';
 import Users from './pages/Users';
 import UserEdit from './pages/UserEdit';
 import Rooms from './pages/Rooms';
-import RoomCreate from './pages/RoomCreate';
+import RoomEdit from './pages/RoomEdit';
 import Facilities from './pages/Facilities';
 import FacilityEdit from './pages/FacilityEdit';
 import PrivateRoute from '../components/routing/PrivateRoute';
@@ -30,7 +30,8 @@ export class App extends Component {
             component={FacilityEdit}
           />
           <PrivateRoute path='/rooms' exact component={Rooms} />
-          <PrivateRoute path='/rooms/new' exact component={RoomCreate} />
+          <PrivateRoute path='/rooms/new' exact component={RoomEdit} />
+          <PrivateRoute path='/rooms/:roomId/edit' exact component={RoomEdit} />
         </Switch>
       </Router>
     );

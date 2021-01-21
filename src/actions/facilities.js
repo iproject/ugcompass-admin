@@ -11,7 +11,6 @@ import {
   FILTER_FACILITIES,
   SET_CURRENT_FACILITY,
   CLEAR_FILTERED_FACILITIES,
-  CLEAR_FACILITY_FORM_DATA,
   CLEAR_CURRENT_FACILITY,
 } from '../actions/types';
 
@@ -167,7 +166,6 @@ export const setCurrentFacility = (facility) => (dispatch) => {
 export const clearCurrentFacility = () => (dispatch) => {
   dispatch(reset('facilityForm'));
 
-  // dispatch({ type: CLEAR_FACILITY_FORM_DATA });
   dispatch({
     type: CLEAR_CURRENT_FACILITY,
   });

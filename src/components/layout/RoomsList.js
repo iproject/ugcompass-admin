@@ -2,9 +2,9 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { CSSTransition } from 'react-transition-group';
-import { deleteRoom } from '../../actions/rooms';
+import { deleteRoom, setCurrentRoom } from '../../actions/rooms';
 
-const RoomsList = ({ rooms, roomsLoading, deleteRoom }) => {
+const RoomsList = ({ rooms, roomsLoading, deleteRoom, setCurrentRoom }) => {
   const onDeleteRoom = (room) => {
     const shouldDeleteRoom = window.confirm(
       `Are you sure you want to delete ${room.name}`
@@ -22,7 +22,11 @@ const RoomsList = ({ rooms, roomsLoading, deleteRoom }) => {
           <CSSTransition key={room._id} timeout={500} classNames='item'>
             <div className='item'>
               <div className='content'>
-                <Link className='header' to={`/rooms/${room._id}/edit`}>
+                <Link
+                  className='header'
+                  to={`/rooms/${room._id}/edit`}
+                  onClick={() => setCurrentRoom(room)}
+                >
                   {room.name} |{' '}
                   <span className='user-role'>{room.category}</span>
                 </Link>
@@ -54,4 +58,6 @@ const mapStateToProps = (state) => {
   };
 };
 
-export default connect(mapStateToProps, { deleteRoom })(RoomsList);
+export default connect(mapStateToProps, { deleteRoom, setCurrentRoom })(
+  RoomsList
+);

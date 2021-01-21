@@ -138,10 +138,10 @@ class UserEdit extends Component {
                     label='Password'
                   />
 
-                  <div class='inline fields'>
+                  <div className='inline fields'>
                     <label>User role: </label>
-                    <div class='field'>
-                      <div class='ui radio checkbox'>
+                    <div className='field'>
+                      <div className='ui radio checkbox'>
                         <Field
                           name='role'
                           component='input'
@@ -152,8 +152,8 @@ class UserEdit extends Component {
                         <label>User</label>
                       </div>
                     </div>
-                    <div class='field'>
-                      <div class='ui radio checkbox'>
+                    <div className='field'>
+                      <div className='ui radio checkbox'>
                         <Field
                           name='role'
                           component='input'

@@ -1,13 +1,14 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import { reduxForm } from 'redux-form';
-export class EditFacilityPhotos extends Component {
+
+export class EditRoomPhotos extends Component {
   render() {
     const {
       handleSubmit,
       previousPage,
-      currentFacility,
-      facilitiesLoading,
+      currentRoom,
+      roomsLoading,
       isUpdating,
     } = this.props;
 
@@ -20,11 +21,11 @@ export class EditFacilityPhotos extends Component {
     return (
       <Fragment>
         <h3 className={`ui dividing header ${isUpdating ? 'orange' : 'blue'}`}>
-          {isUpdating ? 'Update Facility Photos' : 'Select Photo for Facility'}
+          {isUpdating ? 'Update Room Photos' : 'Select Photo for Room'}
         </h3>
         <p>
-          <span style={{ color: 'red' }}>Note:</span> You can add a maximum of 5
-          photos for a facility
+          <span style={{ color: 'red' }}>Note:</span> You can add a maximum of 3
+          photos for a room
         </p>
 
         <form onSubmit={submitForm}>
@@ -54,12 +55,12 @@ export class EditFacilityPhotos extends Component {
 
             <button
               className={`ui right floated icon button ${
-                facilitiesLoading ? 'loading' : null
-              }  ${isUpdating ? 'orange' : 'blue'}`}
+                roomsLoading ? 'loading' : null
+              } ${isUpdating ? 'orange' : 'blue'}`}
               style={{ marginTop: '1rem' }}
               type='submit'
             >
-              {currentFacility ? 'Update Facility' : 'Add Facility'}
+              {currentRoom ? 'Update Room' : 'Add Room'}
             </button>
           </div>
         </form>
@@ -69,21 +70,21 @@ export class EditFacilityPhotos extends Component {
 }
 
 const mapStateToProps = (state) => {
-  const { facilitiesLoading, currentFacility } = state.facilities;
+  const { roomsLoading, currentRoom } = state.rooms;
 
   return {
-    facilitiesLoading,
-    currentFacility,
+    roomsLoading,
+    currentRoom,
     // initialValues: { photo: [] }, // ! Find another way to implement this because it overwrites changes made to the form
   };
 };
 
 const formWrapper = reduxForm({
-  form: 'facilityForm', // <------ same form name
+  form: 'roomForm', // <------ same form name
   destroyOnUnmount: false, // <------ preserve form data
   forceUnregisterOnUnmount: true, // <------ unregister fields on unmount
   enableReinitialize: true,
   keepDirtyOnReinitialize: true,
-})(EditFacilityPhotos);
+})(EditRoomPhotos);
 
 export default connect(mapStateToProps)(formWrapper);

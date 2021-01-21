@@ -2,30 +2,34 @@ import React, { Fragment, useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { Link, Prompt } from 'react-router-dom';
 import { isDirty, reduxForm } from 'redux-form';
-import EditFacilityDetail from '../forms/EditFacilityDetail';
-import EditFacilityPhotos from '../forms/EditFacilityPhotos';
-import EditFacilityWorkingHours from '../forms/EditFacilityWorkingHours';
+import EditRoomDetail from '../forms/EditRoomDetail';
+import EditRoomPhotos from '../forms/EditRoomPhotos';
 import Sidebar from '../layout/LeftSidebar';
 import Navbar from '../layout/MainNavbar';
 import {
-  createFacility,
-  fetchFacility,
-  updateFacility,
-  clearCurrentFacility,
-} from '../../actions/facilities';
+  createRoom,
+  fetchRoom,
+  updateRoom,
+  clearCurrentRoom,
+} from '../../actions/rooms';
+import { fetchFacilities } from '../../actions/facilities';
 
-const FacilityEdit = (props) => {
+const RoomEdit = (props) => {
   const {
-    isFormDirty,
-    updateFacility,
-    clearCurrentFacility,
-    createFacility,
-    currentFacility,
+    facilities,
     facilitiesLoading,
+    fetchFacilities,
+    isFormDirty,
+    updateRoom,
+    clearCurrentRoom,
+    createRoom,
+    currentRoom,
+    roomsLoading,
   } = props;
 
   const [page, setPage] = useState(1);
   const [isBlocking, setBlocking] = useState(isFormDirty);
+  const [selectedFacility, setSelectedFacility] = useState(null);
   const [isUpdating, setUpdating] = useState(false);
 
   useEffect(() => {
@@ -37,6 +41,10 @@ const FacilityEdit = (props) => {
       setUpdating(true);
     }
 
+    // Fetch facilities for dropDown component
+    if (facilities === null) {
+      fetchFacilities();
+    }
     // Blog navigation on unsaved changes
     setBlocking(isFormDirty);
     if (isBlocking) {
@@ -45,7 +53,7 @@ const FacilityEdit = (props) => {
       window.onbeforeunload = undefined;
     }
     // eslint-disable-next-line
-  }, [isFormDirty, isBlocking]);
+  }, [facilities, isFormDirty, isBlocking, fetchFacilities]);
 
   // Set is blocking to false first time doc load
   useEffect(() => {
@@ -68,12 +76,12 @@ const FacilityEdit = (props) => {
 
   // on wizard form submission
   const onSubmit = (formValues) => {
-    if (props.match.params.facilityId) {
-      updateFacility(formValues, currentFacility._id);
+    if (props.match.params.roomId) {
+      updateRoom(formValues, currentRoom._id);
     } else {
-      createFacility(formValues);
+      createRoom(formValues, selectedFacility);
     }
-    clearCurrentFacility();
+    clearCurrentRoom();
   };
 
   return (
@@ -86,7 +94,7 @@ const FacilityEdit = (props) => {
             <Link
               className='ui left labeled tiny icon button '
               type='button'
-              to='/facilities'
+              to='/rooms'
             >
               <i className='left arrow icon'></i>
               Back To List
@@ -95,7 +103,7 @@ const FacilityEdit = (props) => {
               <span
                 style={{
                   marginLeft: '1rem',
-                  color: 'orange',
+                  color: isUpdating ? '#F06B20' : '#2389CE',
                   fontWeight: 'bold',
                 }}
               >
@@ -109,61 +117,53 @@ const FacilityEdit = (props) => {
             <button
               className='ui right floated button red tiny'
               type='button'
-              onClick={() => clearCurrentFacility()}
+              onClick={() => clearCurrentRoom()}
             >
               Clear Form
             </button>
           </div>
 
           <Fragment>
-            {currentFacility && !facilitiesLoading ? (
+            {currentRoom && !roomsLoading ? (
               <Fragment>
                 {page === 1 && (
-                  <EditFacilityDetail
-                    currentFacility={currentFacility}
-                    clearCurrentFacility={clearCurrentFacility}
+                  <EditRoomDetail
+                    facilities={facilities}
+                    facilitiesLoading={facilitiesLoading}
+                    currentRoom={currentRoom}
+                    clearCurrentRoom={clearCurrentRoom}
+                    setSelectedFacility={setSelectedFacility}
                     onSubmit={nextPage}
                     isUpdating={isUpdating}
                   />
                 )}
                 {page === 2 && (
-                  <EditFacilityWorkingHours
-                    previousPage={previousPage}
-                    onSubmit={nextPage}
-                    isUpdating={isUpdating}
-                  />
-                )}
-                {page === 3 && (
-                  <EditFacilityPhotos
+                  <EditRoomPhotos
                     previousPage={previousPage}
                     onSubmit={onSubmit}
-                    isUpdating={isUpdating}
                     disableNavigationBlocking={disableNavigationBlocking}
+                    isUpdating={isUpdating}
                   />
                 )}
               </Fragment>
             ) : (
               <>
                 {page === 1 && (
-                  <EditFacilityDetail
+                  <EditRoomDetail
+                    facilities={facilities}
+                    facilitiesLoading={facilitiesLoading}
                     onSubmit={nextPage}
+                    setSelectedFacility={setSelectedFacility}
+                    clearCurrentRoom={clearCurrentRoom}
                     isUpdating={isUpdating}
-                    clearCurrentFacility={clearCurrentFacility}
                   />
                 )}
                 {page === 2 && (
-                  <EditFacilityWorkingHours
-                    previousPage={previousPage}
-                    onSubmit={nextPage}
-                    isUpdating={isUpdating}
-                  />
-                )}
-                {page === 3 && (
-                  <EditFacilityPhotos
+                  <EditRoomPhotos
                     previousPage={previousPage}
                     onSubmit={onSubmit}
-                    isUpdating={isUpdating}
                     disableNavigationBlocking={disableNavigationBlocking}
+                    isUpdating={isUpdating}
                   />
                 )}
               </>
@@ -176,23 +176,28 @@ const FacilityEdit = (props) => {
 };
 
 const mapStateToProps = (state) => {
-  const { currentFacility, facilitiesLoading } = state.facilities;
+  const { currentRoom, roomsLoading } = state.rooms;
+  const { facilities, facilitiesLoading } = state.facilities;
+
   return {
-    isFormDirty: isDirty('facilityForm')(state),
-    currentFacility,
+    isFormDirty: isDirty('roomForm')(state),
+    facilities,
     facilitiesLoading,
+    currentRoom,
+    roomsLoading,
   };
 };
 
 const formWrapper = reduxForm({
-  form: 'facilityForm', // <------ same form name
+  form: 'roomForm', // <------ same form name
   enableReinitialize: true,
   keepDirtyOnReinitialize: true,
-})(FacilityEdit);
+})(RoomEdit);
 
 export default connect(mapStateToProps, {
-  createFacility,
-  fetchFacility,
-  updateFacility,
-  clearCurrentFacility,
+  createRoom,
+  fetchRoom,
+  fetchFacilities,
+  updateRoom,
+  clearCurrentRoom,
 })(formWrapper);

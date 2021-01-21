@@ -22,6 +22,7 @@ export class EditFacilityWorkingHours extends Component {
       </div>
     </div>
   );
+
   renderWorkingHours = ({ fields, meta: { error, submitFailed } }) => {
     return (
       <>
@@ -82,10 +83,12 @@ export class EditFacilityWorkingHours extends Component {
   };
 
   render() {
-    const { handleSubmit, previousPage } = this.props;
+    const { handleSubmit, previousPage, isUpdating } = this.props;
     return (
       <form className='ui form' onSubmit={handleSubmit}>
-        <h3 className='ui dividing header'>Add Working Hours</h3>
+        <h3 className={`ui dividing header ${isUpdating ? 'orange' : 'blue'}`}>
+          {isUpdating ? 'Update Working Hours' : 'Edit Working Hours'}
+        </h3>
 
         <FieldArray name='hours' component={this.renderWorkingHours} />
 

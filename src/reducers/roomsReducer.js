@@ -6,6 +6,7 @@ import {
   SEARCH_ROOMS_SUCCESS,
   FILTER_ROOMS,
   CLEAR_FILTERED_ROOMS,
+  SET_CURRENT_ROOM,
   CLEAR_CURRENT_ROOM,
 } from '../actions/types';
 
@@ -72,6 +73,13 @@ const roomsReducer = (state = initialState, { type, payload }) => {
         ...state,
         filteredRooms: null,
         roomsLoading: false,
+      };
+
+    case SET_CURRENT_ROOM:
+      return {
+        ...state,
+        currentRoom: payload,
+        facilityLoading: false,
       };
 
     case CLEAR_CURRENT_ROOM:

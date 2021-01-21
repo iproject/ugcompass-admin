@@ -66,7 +66,7 @@ export class EditFacilityDetail extends Component {
   };
 
   render() {
-    const { handleSubmit, facilitiesLoading } = this.props;
+    const { handleSubmit, facilitiesLoading, isUpdating } = this.props;
 
     return (
       <div className='container ui'>
@@ -76,7 +76,13 @@ export class EditFacilityDetail extends Component {
           } error edit-facility-detail-form`}
           onSubmit={handleSubmit}
         >
-          <h3 className='ui dividing header'>Edit Facility Information</h3>
+          <h3
+            className={`ui dividing header ${isUpdating ? 'orange' : 'blue'}`}
+          >
+            {isUpdating
+              ? 'Update Facility Information'
+              : 'Edit Facility Information'}
+          </h3>
           {facilitiesLoading && (
             <div className='ui compact message populating-form-msg'>
               <p>Populating form. Please wait...</p>
