@@ -17,6 +17,7 @@ const Facilities = (props) => {
   const [searchTerm, setSearchTerm] = useState('');
 
   const {
+    loadUser,
     currentUser,
     facilities,
     filteredFacilities,
@@ -30,7 +31,7 @@ const Facilities = (props) => {
     if (!currentUser) loadUser();
     fetchFacilities();
     // eslint-disable-next-line
-  }, []);
+  }, [currentUser, loadUser]);
 
   useEffect(() => {
     if (searchTerm) {
@@ -107,6 +108,7 @@ const mapStateToProps = (state) => {
 };
 
 export default connect(mapStateToProps, {
+  loadUser,
   fetchFacilities,
   filterFacilities,
   clearFilteredFacilities,

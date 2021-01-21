@@ -13,9 +13,12 @@ import {
   updateFacility,
   clearCurrentFacility,
 } from '../../actions/facilities';
+import { loadUser } from '../../actions/auth';
 
 const FacilityEdit = (props) => {
   const {
+    loadUser,
+    currentUser,
     isFormDirty,
     updateFacility,
     clearCurrentFacility,
@@ -29,6 +32,7 @@ const FacilityEdit = (props) => {
   const [isUpdating, setUpdating] = useState(false);
 
   useEffect(() => {
+    if (!currentUser) loadUser();
     // Check if updating form for style changes
     const path = window.location.pathname.split('/')[2];
     if (path === 'new') {
@@ -45,7 +49,7 @@ const FacilityEdit = (props) => {
       window.onbeforeunload = undefined;
     }
     // eslint-disable-next-line
-  }, [isFormDirty, isBlocking]);
+  }, [isFormDirty, isBlocking, currentUser, loadUser]);
 
   // Set is blocking to false first time doc load
   useEffect(() => {
@@ -177,8 +181,10 @@ const FacilityEdit = (props) => {
 
 const mapStateToProps = (state) => {
   const { currentFacility, facilitiesLoading } = state.facilities;
+  const { currentUser } = state.auth;
   return {
     isFormDirty: isDirty('facilityForm')(state),
+    currentUser,
     currentFacility,
     facilitiesLoading,
   };
@@ -191,6 +197,7 @@ const formWrapper = reduxForm({
 })(FacilityEdit);
 
 export default connect(mapStateToProps, {
+  loadUser,
   createFacility,
   fetchFacility,
   updateFacility,

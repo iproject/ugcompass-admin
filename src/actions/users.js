@@ -3,27 +3,55 @@ import { reset } from 'redux-form';
 import history from '../utils/history';
 import {
   FETCH_USERS_SUCCESS,
+  FETCH_USERS_ERROR,
   FETCH_USER_SUCCESS,
+  FETCH_USER_ERROR,
   CREATE_USER_SUCCESS,
+  CREATE_USER_ERROR,
+  UPDATE_USER_SUCCESS,
+  UPDATE_USER_ERROR,
   DELETE_USER_SUCCESS,
+  DELETE_USER_ERROR,
   FILTER_USERS,
   CLEAR_FILTERED_USERS,
   CLEAR_CURRENT_USER,
 } from '../actions/types';
+import { setAlert } from './alerts';
+
+// Set error response
+const setErrorResponse = (
+  err,
+  actionType,
+  dispatch,
+  additionalMessage = '',
+  alertTimer = 3000
+) => {
+  if (err.response) {
+    dispatch({ type: actionType, payload: err.response.data.error });
+    dispatch(
+      setAlert('red', err.response.data.error, additionalMessage, alertTimer)
+    );
+  } else {
+    dispatch({ type: actionType, payload: err.message });
+    dispatch(setAlert('red', err.message, additionalMessage, alertTimer));
+  }
+};
 
 export const fetchUsers = () => async (dispatch) => {
-  const { data } = await ugCompass.get('/users', {
-    headers: {
-      Authorization: localStorage.getItem('ugcompass_token'),
-    },
-  });
+  try {
+    const { data } = await ugCompass.get('/users', {
+      headers: {
+        Authorization: localStorage.getItem('ugcompass_token'),
+      },
+    });
 
-  dispatch({
-    type: FETCH_USERS_SUCCESS,
-    payload: data.data,
-  });
-
-  // Todo: Handle Errors
+    dispatch({
+      type: FETCH_USERS_SUCCESS,
+      payload: data.data,
+    });
+  } catch (err) {
+    setErrorResponse(err, FETCH_USERS_ERROR, dispatch);
+  }
 };
 
 export const fetchUser = (userId) => async (dispatch, getState) => {
@@ -40,8 +68,7 @@ export const fetchUser = (userId) => async (dispatch, getState) => {
       payload: data,
     });
   } catch (err) {
-    console.log(err);
-    // Todo: Handle Errors
+    setErrorResponse(err, FETCH_USER_ERROR, dispatch);
   }
 };
 
@@ -60,9 +87,9 @@ export const createUser = (formValues) => async (dispatch, getState) => {
     });
     dispatch(reset('userForm'));
     history.push('/users');
+    dispatch(setAlert('green', 'User created successfully', '', 3000));
   } catch (err) {
-    console.log(err);
-    // Todo: Handle Errors
+    setErrorResponse(err, CREATE_USER_ERROR, dispatch);
   }
 };
 
@@ -72,17 +99,21 @@ export const updateUser = (formValues, userId) => async (
 ) => {
   getState().users.usersLoading = true;
   try {
-    await ugCompass.put(`/users/${userId}`, formValues, {
+    const user = await ugCompass.put(`/users/${userId}`, formValues, {
       headers: {
         Authorization: localStorage.ugcompass_token,
         'Content-Type': 'application/json',
       },
     });
+    dispatch({
+      type: UPDATE_USER_SUCCESS,
+      payload: { user, users: getState().users.users },
+    });
     dispatch(reset('userForm'));
     history.push('/users');
+    dispatch(setAlert('green', 'User updated successfully', '', 3000));
   } catch (err) {
-    console.log(err);
-    // Todo: Handle Errors
+    setErrorResponse(err, UPDATE_USER_ERROR, dispatch);
   }
 };
 
@@ -98,9 +129,9 @@ export const deleteUser = (userId) => async (dispatch, getState) => {
       type: DELETE_USER_SUCCESS,
       payload: { userId, users: getState().users.users },
     });
+    dispatch(setAlert('green', 'User deleted successfully', '', 3000));
   } catch (err) {
-    console.log(err);
-    // Todo: Handle Errors
+    setErrorResponse(err, DELETE_USER_ERROR, dispatch);
   }
 };
 

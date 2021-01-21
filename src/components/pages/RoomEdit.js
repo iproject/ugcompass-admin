@@ -13,9 +13,12 @@ import {
   clearCurrentRoom,
 } from '../../actions/rooms';
 import { fetchFacilities } from '../../actions/facilities';
+import { loadUser } from '../../actions/auth';
 
 const RoomEdit = (props) => {
   const {
+    loadUser,
+    currentUser,
     facilities,
     facilitiesLoading,
     fetchFacilities,
@@ -33,6 +36,8 @@ const RoomEdit = (props) => {
   const [isUpdating, setUpdating] = useState(false);
 
   useEffect(() => {
+    if (!currentUser) loadUser();
+
     // Check if updating form for style changes
     const path = window.location.pathname.split('/')[2];
     if (path === 'new') {
@@ -53,7 +58,14 @@ const RoomEdit = (props) => {
       window.onbeforeunload = undefined;
     }
     // eslint-disable-next-line
-  }, [facilities, isFormDirty, isBlocking, fetchFacilities]);
+  }, [
+    facilities,
+    isFormDirty,
+    isBlocking,
+    fetchFacilities,
+    currentUser,
+    loadUser,
+  ]);
 
   // Set is blocking to false first time doc load
   useEffect(() => {
@@ -180,9 +192,11 @@ const RoomEdit = (props) => {
 const mapStateToProps = (state) => {
   const { currentRoom, roomsLoading } = state.rooms;
   const { facilities, facilitiesLoading } = state.facilities;
+  const { currentUser } = state.auth;
 
   return {
     isFormDirty: isDirty('roomForm')(state),
+    currentUser,
     facilities,
     facilitiesLoading,
     currentRoom,
@@ -197,6 +211,7 @@ const formWrapper = reduxForm({
 })(RoomEdit);
 
 export default connect(mapStateToProps, {
+  loadUser,
   createRoom,
   fetchRoom,
   fetchFacilities,

@@ -29,7 +29,18 @@ button:hover {
 }
 
 .forgot-password {
-  margin-top: 1rem !important;
+  margin-top: 2rem !important;
+  text-align: center;
+}
+.forgot-password a {
+  color: teal;
+}
+.forgot-password .label.pointing {
+  opacity: 0;
+  transition: 0.35s;
+}
+.forgot-password a:hover + .label.pointing {
+  opacity: 1;
 }
 
 .working-hour-field {
@@ -193,7 +204,8 @@ button:hover {
 /* **** Authentication */
 .auth-content {
   width: 40%;
-  margin: 50px auto;
+  margin: auto;
+  margin-top: 6rem;
 }
 
 .auth-content form p {

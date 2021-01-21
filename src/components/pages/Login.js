@@ -1,18 +1,26 @@
-import React, { Component, Fragment } from 'react';
-import { Link } from 'react-router-dom';
+import React, { Fragment, useEffect } from 'react';
 import { Field, reduxForm } from 'redux-form';
 import { connect } from 'react-redux';
+import { Label } from 'semantic-ui-react';
 import Navbar from '../layout/SimpleNavbar';
 import { login, loadUser } from '../../actions/auth';
 import history from '../../utils/history';
-class Login extends Component {
-  componentDidMount() {
-    if (this.props.isAuthenticated) {
+
+const Login = (props) => {
+  const { loading, isAuthenticated, handleSubmit, login } = props;
+
+  useEffect(() => {
+    if (isAuthenticated) {
       history.push('/');
     }
-  }
+  }, [isAuthenticated]);
 
-  renderField = ({ input, label, type, meta: { touched, error, warning } }) => {
+  const renderField = ({
+    input,
+    label,
+    type,
+    meta: { touched, error, warning },
+  }) => {
     return (
       <div className='field'>
         <label>{label}</label>
@@ -31,45 +39,50 @@ class Login extends Component {
     );
   };
 
-  onSubmit = (formValues) => {
-    this.props.login(formValues);
+  const onSubmit = (formValues) => {
+    login(formValues);
   };
 
-  renderForm = () => {
+  const renderForm = () => {
     return (
       <Fragment>
         <Navbar />
         <div className='auth-content'>
           <h2 className='ui header'>Login</h2>
 
-          <form
-            className='ui form'
-            onSubmit={this.props.handleSubmit(this.onSubmit)}
-          >
+          <form className='ui form' onSubmit={handleSubmit(onSubmit)}>
             <Field
               name='email'
               type='email'
-              component={this.renderField}
+              component={renderField}
               label='Email'
             />
 
             <Field
               name='password'
               type='password'
-              component={this.renderField}
+              component={renderField}
               label='Password'
             />
 
             <button
-              className={`ui button fluid ${
-                this.props.loading ? 'loading' : null
-              }`}
+              className={`ui button fluid ${loading ? 'loading' : null}`}
               type='submit'
             >
               Submit
             </button>
             <div className='ui field forgot-password'>
-              <Link to='/forgotpassword'>Forgot password?</Link>
+              <a
+                href='https://ugcompass.netlify.app/forgotpassword'
+                target='_blank'
+                rel='noreferrer'
+              >
+                Forgot password?
+              </a>
+              <Label basic color='teal' pointing>
+                Change password in main application and get back here to
+                continue editing.
+              </Label>
             </div>
           </form>
         </div>
@@ -77,10 +90,8 @@ class Login extends Component {
     );
   };
 
-  render() {
-    return <> {this.renderForm()} </>;
-  }
-}
+  return <> {renderForm()} </>;
+};
 
 const validate = (values) => {
   const errors = {};

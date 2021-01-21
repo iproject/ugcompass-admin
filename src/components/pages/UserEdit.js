@@ -10,9 +10,13 @@ import {
   updateUser,
   clearCurrentUser,
 } from '../../actions/users';
+import { loadUser } from '../../actions/auth';
 
 class UserEdit extends Component {
   componentDidMount() {
+    // Load user
+    if (!this.props.authCurrentUser) loadUser();
+
     const isEditing = window.location.pathname.split('/')[3];
     this.userId = this.props.match.params.userId;
 
@@ -201,8 +205,10 @@ const validate = (formValues) => {
 
 const mapStateToProps = (state) => {
   const { usersLoading, currentUser } = state.users; // * Current user is the fetchedUser
+  const { currentUser: authCurrentUser } = state.auth;
 
   return {
+    authCurrentUser,
     isFormDirty: isDirty('userForm')(state),
     usersLoading,
     fetchedUser: currentUser,
@@ -219,6 +225,7 @@ const formWrapper = reduxForm({
 })(UserEdit);
 
 export default connect(mapStateToProps, {
+  loadUser,
   createUser,
   fetchUser,
   updateUser,

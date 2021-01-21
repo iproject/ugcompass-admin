@@ -2,15 +2,16 @@ import {
   LOGIN_SUCCESS,
   LOAD_USER_SUCCESS,
   LOGOUT_SUCCESS,
+  AUTH_ERROR,
+  LOGOUT_ERROR,
 } from '../actions/types';
 
 const initialState = {
   token: null,
+  currentUser: null,
   isAuthenticated: false,
   authLoading: false,
   error: null,
-  message: null,
-  currentUser: null,
 };
 
 const authReducer = (state = initialState, { type, payload }) => {
@@ -32,13 +33,27 @@ const authReducer = (state = initialState, { type, payload }) => {
       };
 
     case LOGOUT_SUCCESS:
-      console.log(state);
       return {
         ...state,
         currentUser: null,
         isAuthenticated: false,
         token: null,
         authLoading: false,
+      };
+
+    case AUTH_ERROR:
+      return {
+        ...state,
+        token: null,
+        isAuthenticated: false,
+        authLoading: false,
+        currentUser: null,
+        error: payload,
+      };
+
+    case LOGOUT_ERROR:
+      return {
+        ...state,
       };
 
     default:

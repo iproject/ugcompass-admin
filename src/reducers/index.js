@@ -4,6 +4,7 @@ import authReducer from './authReducer';
 import usersReducer from './usersReducer';
 import facilitiesReducer from './facilitiesReducer';
 import roomsReducer from './roomsReducer';
+import alertsReducer from './alertsReducer';
 
 export default combineReducers({
   auth: authReducer,
@@ -11,4 +12,5 @@ export default combineReducers({
   users: usersReducer,
   facilities: facilitiesReducer,
   rooms: roomsReducer,
+  alerts: alertsReducer,
 });

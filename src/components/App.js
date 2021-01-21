@@ -1,6 +1,7 @@
 import './App.css';
 import React, { Component } from 'react';
 import { Router, Route, Switch } from 'react-router-dom';
+import { Offline } from 'react-detect-offline';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
 import Users from './pages/Users';
@@ -11,11 +12,21 @@ import Facilities from './pages/Facilities';
 import FacilityEdit from './pages/FacilityEdit';
 import PrivateRoute from '../components/routing/PrivateRoute';
 import history from '../utils/history';
+import Toast from './layout/Toast/Toast';
+import Alert from './layout/Alert/Alert';
 
 export class App extends Component {
   render() {
     return (
       <Router history={history}>
+        <Offline>
+          <Toast
+            type='danger'
+            msg='Lost Connection'
+            subMsg='Trying to reconnect...'
+          />
+        </Offline>
+        <Alert />
         <Switch>
           <Route path='/login' exact component={Login} />
           <PrivateRoute path='/' exact component={Dashboard} />

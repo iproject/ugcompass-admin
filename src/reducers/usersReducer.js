@@ -1,8 +1,14 @@
 import {
   FETCH_USERS_SUCCESS,
+  FETCH_USERS_ERROR,
+  FETCH_USER_ERROR,
   FETCH_USER_SUCCESS,
   CREATE_USER_SUCCESS,
+  CREATE_USER_ERROR,
+  UPDATE_USER_SUCCESS,
+  UPDATE_USER_ERROR,
   DELETE_USER_SUCCESS,
+  DELETE_USER_ERROR,
   FILTER_USERS,
   CLEAR_FILTERED_USERS,
   CLEAR_CURRENT_USER,
@@ -38,6 +44,15 @@ const usersReducer = (state = initialState, { type, payload }) => {
         usersLoading: false,
       };
 
+    case UPDATE_USER_SUCCESS:
+      return {
+        ...state,
+        users: payload.users.filter((user) =>
+          user._id === payload.user._id ? payload.user : user
+        ),
+        usersLoading: false,
+      };
+
     case DELETE_USER_SUCCESS:
       return {
         ...state,
@@ -66,6 +81,17 @@ const usersReducer = (state = initialState, { type, payload }) => {
         ...state,
         currentUser: null,
         usersLoading: false,
+      };
+
+    case FETCH_USERS_ERROR:
+    case FETCH_USER_ERROR:
+    case CREATE_USER_ERROR:
+    case UPDATE_USER_ERROR:
+    case DELETE_USER_ERROR:
+      return {
+        ...state,
+        usersLoading: false,
+        error: payload,
       };
 
     default:
