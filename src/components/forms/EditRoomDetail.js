@@ -52,6 +52,7 @@ export class EditRoomDetail extends Component {
       setSelectedFacility,
       facilitiesLoading,
       isUpdating,
+      selectedFacility,
     } = this.props;
 
     return (
@@ -83,7 +84,7 @@ export class EditRoomDetail extends Component {
               defaultValue={
                 currentRoom
                   ? this.getDropdownDefaultValue(currentRoom.facility).value
-                  : null
+                  : selectedFacility
               }
               disabled={currentRoom ? true : false}
               onChange={(e, { value }) => setSelectedFacility(value)}

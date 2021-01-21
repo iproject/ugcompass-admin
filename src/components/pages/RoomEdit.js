@@ -135,6 +135,7 @@ const RoomEdit = (props) => {
                     setSelectedFacility={setSelectedFacility}
                     onSubmit={nextPage}
                     isUpdating={isUpdating}
+                    selectedFacility={selectedFacility}
                   />
                 )}
                 {page === 2 && (
@@ -156,6 +157,7 @@ const RoomEdit = (props) => {
                     setSelectedFacility={setSelectedFacility}
                     clearCurrentRoom={clearCurrentRoom}
                     isUpdating={isUpdating}
+                    selectedFacility={selectedFacility}
                   />
                 )}
                 {page === 2 && (
