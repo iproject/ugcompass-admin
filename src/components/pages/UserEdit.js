@@ -17,11 +17,13 @@ class UserEdit extends Component {
     // Load user
     if (!this.props.authCurrentUser) loadUser();
 
-    const isEditing = window.location.pathname.split('/')[3];
     this.userId = this.props.match.params.userId;
-
-    if (this.userId) this.props.fetchUser(this.userId);
-    if (isEditing === 'edit') this.isEditing = isEditing;
+    if (this.userId) {
+      this.props.fetchUser(this.userId);
+      this.isUpdating = true;
+    } else {
+      this.isUpdating = false;
+    }
   }
 
   componentWillUnmount() {
@@ -54,7 +56,7 @@ class UserEdit extends Component {
   };
 
   passwordValidation = (value) => {
-    if (this.isEditing) {
+    if (this.isUpdating) {
       return undefined;
     } else {
       if (!value) {
@@ -64,7 +66,7 @@ class UserEdit extends Component {
   };
 
   onSubmit = (formValues) => {
-    if (this.isEditing) {
+    if (this.isUpdating) {
       this.props.updateUser(formValues, this.userId);
     } else {
       this.props.createUser(formValues);
@@ -94,7 +96,7 @@ class UserEdit extends Component {
                   <span
                     style={{
                       marginLeft: '1rem',
-                      color: 'orange',
+                      color: this.isUpdating ? '#F06B20' : '#2389CE',
                       fontWeight: 'bold',
                     }}
                   >
@@ -108,8 +110,12 @@ class UserEdit extends Component {
                   className={`ui form ${usersLoading && 'loading'} error`}
                   onSubmit={this.props.handleSubmit(this.onSubmit)}
                 >
-                  <div className='ui dividing header'>
-                    {this.isEditing ? 'Update User' : 'Add User'}
+                  <div
+                    className={`ui dividing header ${
+                      this.isUpdating ? 'orange' : 'blue'
+                    }`}
+                  >
+                    {this.isUpdating ? 'Update User' : 'Add User'}
                   </div>
                   <Field
                     name='name'
@@ -124,13 +130,13 @@ class UserEdit extends Component {
                     component={this.renderInput}
                     label='Email'
                   />
-                  {this.isEditing && (
+                  {this.isUpdating && (
                     <div className='ui message yellow'>
                       <h1 className='header'>Password Alert</h1>
                       <p>
-                        Please do not tamper with users password field if you
-                        dont mean to alter user password intentionally. This can
-                        prevent the accounts holder from accessing his account.
+                        Please do not tamper with password field if you dont
+                        mean to alter user password. This can prevent the
+                        accounts holder from accessing his account.
                       </p>
                     </div>
                   )}
@@ -172,10 +178,10 @@ class UserEdit extends Component {
 
                   <button
                     className={`ui button ${
-                      this.isEditing ? 'green' : 'primary'
+                      this.isUpdating ? 'orange' : 'blue'
                     }`}
                   >
-                    Submit
+                    {this.isUpdating ? 'Update User' : 'Add User'}
                   </button>
                 </form>
               </div>
