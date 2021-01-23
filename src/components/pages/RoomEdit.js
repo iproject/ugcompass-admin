@@ -29,7 +29,6 @@ const RoomEdit = (props) => {
     createRoom,
     currentRoom,
     roomsLoading,
-    setAlert,
   } = props;
 
   const [page, setPage] = useState(1);
