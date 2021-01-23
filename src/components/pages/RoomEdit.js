@@ -14,6 +14,7 @@ import {
 } from '../../actions/rooms';
 import { fetchFacilities } from '../../actions/facilities';
 import { loadUser } from '../../actions/auth';
+import { setAlert } from '../../actions/alerts';
 
 const RoomEdit = (props) => {
   const {
@@ -28,6 +29,7 @@ const RoomEdit = (props) => {
     createRoom,
     currentRoom,
     roomsLoading,
+    setAlert,
   } = props;
 
   const [page, setPage] = useState(1);
@@ -50,6 +52,7 @@ const RoomEdit = (props) => {
     if (facilities === null) {
       fetchFacilities();
     }
+
     // Blog navigation on unsaved changes
     setBlocking(isFormDirty);
     if (isBlocking) {
@@ -58,14 +61,7 @@ const RoomEdit = (props) => {
       window.onbeforeunload = undefined;
     }
     // eslint-disable-next-line
-  }, [
-    facilities,
-    isFormDirty,
-    isBlocking,
-    fetchFacilities,
-    currentUser,
-    loadUser,
-  ]);
+  }, [facilities, isFormDirty, fetchFacilities, currentUser, loadUser]);
 
   // Set is blocking to false first time doc load
   useEffect(() => {
@@ -73,10 +69,6 @@ const RoomEdit = (props) => {
 
     // eslint-disable-next-line
   }, []);
-
-  const disableNavigationBlocking = () => {
-    setBlocking(false);
-  };
 
   const nextPage = () => {
     setPage(page + 1);
@@ -93,7 +85,6 @@ const RoomEdit = (props) => {
     } else {
       createRoom(formValues, selectedFacility);
     }
-    clearCurrentRoom();
   };
 
   return (
@@ -154,8 +145,8 @@ const RoomEdit = (props) => {
                   <EditRoomPhotos
                     previousPage={previousPage}
                     onSubmit={onSubmit}
-                    disableNavigationBlocking={disableNavigationBlocking}
                     isUpdating={isUpdating}
+                    setBlocking={setBlocking}
                   />
                 )}
               </Fragment>
@@ -176,8 +167,8 @@ const RoomEdit = (props) => {
                   <EditRoomPhotos
                     previousPage={previousPage}
                     onSubmit={onSubmit}
-                    disableNavigationBlocking={disableNavigationBlocking}
                     isUpdating={isUpdating}
+                    setBlocking={setBlocking}
                   />
                 )}
               </>
@@ -217,4 +208,5 @@ export default connect(mapStateToProps, {
   fetchFacilities,
   updateRoom,
   clearCurrentRoom,
+  setAlert,
 })(formWrapper);

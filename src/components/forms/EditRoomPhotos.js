@@ -3,20 +3,14 @@ import { connect } from 'react-redux';
 import { reduxForm } from 'redux-form';
 
 export class EditRoomPhotos extends Component {
-  render() {
-    const {
-      handleSubmit,
-      previousPage,
-      currentRoom,
-      roomsLoading,
-      isUpdating,
-    } = this.props;
+  submitForm = (e) => {
+    e.preventDefault();
+    this.props.setBlocking(false);
+    this.props.handleSubmit();
+  };
 
-    const submitForm = (e) => {
-      e.preventDefault();
-      this.props.disableNavigationBlocking();
-      handleSubmit();
-    };
+  render() {
+    const { previousPage, currentRoom, roomsLoading, isUpdating } = this.props;
 
     return (
       <Fragment>
@@ -28,7 +22,7 @@ export class EditRoomPhotos extends Component {
           photos for a room
         </p>
 
-        <form onSubmit={submitForm}>
+        <form onSubmit={this.submitForm}>
           <div>
             <div className='form-group'>
               <img src='images/placeholder1.jpg' id='roomPhoto' alt='' />
@@ -55,7 +49,7 @@ export class EditRoomPhotos extends Component {
 
             <button
               className={`ui right floated icon button ${
-                roomsLoading ? 'loading' : null
+                roomsLoading && 'loading'
               } ${isUpdating ? 'orange' : 'blue'}`}
               style={{ marginTop: '1rem' }}
               type='submit'

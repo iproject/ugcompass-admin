@@ -8,23 +8,99 @@ export class EditFacilityDetail extends Component {
     label,
     placeholder,
     type,
-    meta: { touched, error },
-  }) => (
-    <div className='field'>
-      {label && <label>{label}</label>}
-      <div>
-        <input
-          placeholder={placeholder}
-          {...input}
-          type={type}
-          autoComplete='off'
-        />
-        {touched && error && <span>{error}</span>}
-      </div>
-    </div>
-  );
+    meta: { touched, error, warning },
+  }) => {
+    const className = `field ${
+      touched && error ? 'error' : touched && warning ? 'warning' : ''
+    }`;
 
-  renderLocation = ({ fields, meta: { error, submitFailed } }) => {
+    return (
+      <div className={className}>
+        {label && <label>{label}</label>}
+        <div>
+          <input
+            placeholder={placeholder}
+            {...input}
+            type={type}
+            autoComplete='off'
+          />
+          {/* {touched && error && <span>{error}</span>} */}
+          {touched &&
+            ((error && <span>{error}</span>) ||
+              (warning && <span>{warning}</span>))}
+        </div>
+      </div>
+    );
+  };
+
+  renderTextAreaField = ({
+    input,
+    label,
+    placeholder,
+    type,
+    meta: { touched, error, warning },
+  }) => {
+    const className = `field ${
+      touched && error ? 'error' : touched && warning ? 'warning' : ''
+    }`;
+
+    return (
+      <div className={className}>
+        {label && <label>{label}</label>}
+        <div>
+          <textarea
+            placeholder={placeholder}
+            {...input}
+            type={type}
+            autoComplete='off'
+          ></textarea>
+          {/* {touched && error && <span>{error}</span>} */}
+          {touched &&
+            ((error && <span>{error}</span>) ||
+              (warning && <span>{warning}</span>))}
+        </div>
+      </div>
+    );
+  };
+
+  renderSelectField = ({
+    input,
+    label,
+    placeholder,
+    options,
+    type,
+    meta: { touched, error, warning },
+  }) => {
+    const className = `field ${
+      touched && error ? 'error' : touched && warning ? 'warning' : ''
+    }`;
+
+    return (
+      <div className={className}>
+        {label && <label>{label}</label>}
+        <div>
+          <select
+            placeholder={placeholder}
+            {...input}
+            type={type}
+            autoComplete='off'
+          >
+            <option />
+            {options.map((option, index) => (
+              <option key={index} value={option.value}>
+                {option.name}
+              </option>
+            ))}
+          </select>
+          {touched &&
+            ((error && <span>{error}</span>) ||
+              (warning && <span>{warning}</span>))}
+        </div>
+      </div>
+    );
+  };
+
+  renderLocation = ({ fields, meta: { warning, touched, submitFailed } }) => {
     return (
       <Fragment>
         <div className='field'>
@@ -42,6 +118,7 @@ export class EditFacilityDetail extends Component {
                       placeholder='Longitude'
                       step='0.0005'
                     />
+                    <span></span>
                   </div>
                 );
               } else {
@@ -79,9 +156,7 @@ export class EditFacilityDetail extends Component {
           <h3
             className={`ui dividing header ${isUpdating ? 'orange' : 'blue'}`}
           >
-            {isUpdating
-              ? 'Update Facility Information'
-              : 'Edit Facility Information'}
+            {isUpdating ? 'Update ' : 'Edit '} Facility Information
           </h3>
           {facilitiesLoading && (
             <div className='ui compact message populating-form-msg'>
@@ -95,55 +170,46 @@ export class EditFacilityDetail extends Component {
             label='Name'
             placeholder='Enter name'
           />
-          <div className='field'>
-            <label>Description</label>
-            <div>
-              <Field
-                name='description'
-                placeholder='Enter description'
-                component='textarea'
-                style={{
-                  marginTop: '0px',
-                  marginBottom: '0px',
-                  height: '91px',
-                }}
-              />
-            </div>
-          </div>
+          <Field
+            name='description'
+            label='Description'
+            placeholder='Enter description'
+            component={this.renderTextAreaField}
+            style={{
+              marginTop: '0px',
+              marginBottom: '0px',
+              height: '91px',
+            }}
+          />
           <div className='two fields'>
-            <div className='field'>
-              <label>Category</label>
-              <Field
-                name='category'
-                component='select'
-                className='ui fluid dropdown'
-              >
-                <option />
-                <option value='study'>Study</option>
-                <option value='classroom'>Classroom</option>
-                <option value='general_use'>General Use</option>
-                <option value='laboratory'>Laboratory</option>
-                <option value='office'>Office</option>
-                <option value='residential'>Residential</option>
-                <option value='special_use'>Special Use</option>
-                <option value='leased'>Leased</option>
-                <option value='support'>Support</option>
-                <option value='other'>Other</option>
-              </Field>
-            </div>
-
-            <div className='field'>
-              <label>Campus</label>
-              <Field
-                name='campus'
-                component='select'
-                className='ui fluid dropdown'
-              >
-                <option />
-                <option value='legon'>Legon</option>
-                <option value='city'>Accra City</option>
-              </Field>
-            </div>
+            <Field
+              name='category'
+              label='Category'
+              component={this.renderSelectField}
+              className='ui fluid dropdown'
+              options={[
+                { name: 'Study', value: 'study' },
+                { name: 'Classroom', value: 'classroom' },
+                { name: 'General Use', value: 'general_use' },
+                { name: 'Laboratory', value: 'laboratory' },
+                { name: 'Office', value: 'office' },
+                { name: 'Residential', value: 'residential' },
+                { name: 'Special Use', value: 'special_use' },
+                { name: 'Leased', value: 'leased' },
+                { name: 'Support', value: 'support' },
+                { name: 'Other', value: 'other' },
+              ]}
+            />
+            <Field
+              name='campus'
+              label='Campus'
+              component={this.renderSelectField}
+              className='ui fluid dropdown'
+              options={[
+                { name: 'Legon', value: 'legon' },
+                { name: 'Accra City', value: 'city' },
+              ]}
+            />
           </div>
           <FieldArray
             name='location.coordinates'
@@ -197,15 +263,65 @@ export class EditFacilityDetail extends Component {
 const validate = (formValues) => {
   const errors = {};
 
-  if (!formValues.title) {
-    errors.title = 'You must enter a title';
+  if (!formValues.name) {
+    errors.name = 'You must enter a title';
   }
-
   if (!formValues.description) {
     errors.description = 'You must enter a description';
   }
+  if (!formValues.category) {
+    errors.category = 'You must select a category';
+  }
+  if (!formValues.campus) {
+    errors.campus = 'You must select a campus';
+  }
 
   return errors;
+};
+
+const warn = (formValues) => {
+  const warnings = {};
+  // if (
+  //   !formValues.location.coordinates ||
+  //   !formValues.location.coordinates.length < 1
+  // ) {
+  //   warnings.location.coordinates = {
+  //     _warning: 'You should add both logitude and latitude',
+  //   };
+  // } else {
+  //   const coordinatesArrayWarnings = [];
+  //   formValues.location.coordinates.forEach((coordinate, coordinateIndex) => {
+  //     if (!coordinate || !coordinate.length) {
+  //       coordinatesArrayWarnings[coordinateIndex] = 'Required';
+  //     }
+  //     if (hobbyArrayErrors.length) {
+  //       memberErrors.hobbies = hobbyArrayErrors;
+  //       membersArrayErrors[memberIndex] = memberErrors;
+  //     }
+  //     if (member.hobbies.length > 5) {
+  //       if (!memberErrors.hobbies) {
+  //         memberErrors.hobbies = [];
+  //       }
+  //       memberErrors.hobbies._error = 'No more than five hobbies allowed';
+  //       membersArrayErrors[memberIndex] = memberErrors;
+  //     }
+  //   });
+  // }
+
+  if (!formValues.address) {
+    warnings.address = 'Are you sure you want to leave address empty.';
+  }
+  if (!formValues.email) {
+    warnings.email = 'Are you sure you want to leave email empty.';
+  }
+  if (!formValues.website) {
+    warnings.website = 'Are you sure you want to leave website empty.';
+  }
+  if (!formValues.phone) {
+    warnings.phone = 'Are you sure you want to leave phone empty.';
+  }
+
+  return warnings;
 };
 
 const mapStateToProps = (state, ownProps) => {
@@ -232,6 +348,7 @@ const formWrapper = reduxForm({
   enableReinitialize: true,
   keepDirtyOnReinitialize: true,
   validate,
+  warn,
 })(EditFacilityDetail);
 
 export default connect(mapStateToProps)(formWrapper);

@@ -1,9 +1,13 @@
 import {
   FETCH_ROOMS_SUCCESS,
+  FETCH_ROOMS_ERROR,
   FETCH_ROOM_SUCCESS,
+  FETCH_ROOM_ERROR,
   CREATE_ROOM_SUCCESS,
+  CREATE_ROOM_ERROR,
+  UPDATE_ROOM_ERROR,
   DELETE_ROOM_SUCCESS,
-  SEARCH_ROOMS_SUCCESS,
+  DELETE_ROOM_ERROR,
   FILTER_ROOMS,
   CLEAR_FILTERED_ROOMS,
   SET_CURRENT_ROOM,
@@ -15,7 +19,6 @@ const initialState = {
   currentRoom: null,
   roomsLoading: true,
   filteredRooms: null,
-  searchedRooms: null,
   error: null,
   message: null,
 };
@@ -52,10 +55,14 @@ const roomsReducer = (state = initialState, { type, payload }) => {
         roomsLoading: false,
       };
 
-    case SEARCH_ROOMS_SUCCESS:
+    case FETCH_ROOMS_ERROR:
+    case FETCH_ROOM_ERROR:
+    case CREATE_ROOM_ERROR:
+    case UPDATE_ROOM_ERROR:
+    case DELETE_ROOM_ERROR:
       return {
         ...state,
-        searchedRooms: payload.data,
+        error: payload,
         roomsLoading: false,
       };
 

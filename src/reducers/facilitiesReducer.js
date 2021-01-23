@@ -1,10 +1,15 @@
 import {
   FETCH_FACILITIES_SUCCESS,
+  FETCH_FACILITIES_ERROR,
   FETCH_FACILITY_SUCCESS,
+  FETCH_FACILITY_ERROR,
   FETCH_TOP_FACILITIES_SUCCESS,
+  FETCH_TOP_FACILITIES_ERROR,
+  UPDATE_FACILITY_ERROR,
   CREATE_FACILITY_SUCCESS,
+  CREATE_FACILITY_ERROR,
   DELETE_FACILITY_SUCCESS,
-  SEARCH_FACILITIES_SUCCESS,
+  DELETE_FACILITY_ERROR,
   CLEAR_CURRENT_FACILITY,
   CLEAR_FILTERED_FACILITIES,
   FILTER_FACILITIES,
@@ -17,9 +22,7 @@ const initialState = {
   currentFacility: null,
   facilitiesLoading: true,
   filteredFacilities: null,
-  searchedFacilities: null,
   error: null,
-  message: null,
 };
 
 const facilitiesReducer = (state = initialState, { type, payload }) => {
@@ -63,10 +66,15 @@ const facilitiesReducer = (state = initialState, { type, payload }) => {
         facilitiesLoading: false,
       };
 
-    case SEARCH_FACILITIES_SUCCESS:
+    case FETCH_FACILITIES_ERROR:
+    case FETCH_FACILITY_ERROR:
+    case FETCH_TOP_FACILITIES_ERROR:
+    case CREATE_FACILITY_ERROR:
+    case UPDATE_FACILITY_ERROR:
+    case DELETE_FACILITY_ERROR:
       return {
         ...state,
-        searchedFacilities: payload.data,
+        error: payload,
         facilitiesLoading: false,
       };
 

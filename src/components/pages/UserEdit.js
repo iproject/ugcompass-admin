@@ -55,6 +55,29 @@ class UserEdit extends Component {
     );
   };
 
+  renderRadioInput = ({
+    input,
+    label,
+    type,
+    meta: { touched, error, warning },
+  }) => {
+    const className = `field ${
+      touched && error ? 'error' : touched && warning ? 'warning' : ''
+    }`;
+
+    return (
+      <div className={className}>
+        <div className='ui radio checkbox'>
+          <input {...input} type={type} autoComplete='off' />{' '}
+          {label && <label>{label}</label>}
+          {touched &&
+            ((error && <span>{error}</span>) ||
+              (warning && <span>{warning}</span>))}
+        </div>
+      </div>
+    );
+  };
+
   passwordValidation = (value) => {
     if (this.isUpdating) {
       return undefined;
@@ -150,7 +173,21 @@ class UserEdit extends Component {
 
                   <div className='inline fields'>
                     <label>User role: </label>
-                    <div className='field'>
+                    <Field
+                      name='role'
+                      type='radio'
+                      component={this.renderRadioInput}
+                      label='User'
+                      value='user'
+                    />
+                    <Field
+                      name='role'
+                      type='radio'
+                      component={this.renderRadioInput}
+                      label='Publisher'
+                      value='publisher'
+                    />
+                    {/* <div className='field'>
                       <div className='ui radio checkbox'>
                         <Field
                           name='role'
@@ -173,7 +210,7 @@ class UserEdit extends Component {
                         />{' '}
                         <label>Publisher</label>
                       </div>
-                    </div>
+                    </div> */}
                   </div>
 
                   <button
@@ -193,9 +230,6 @@ class UserEdit extends Component {
   }
 }
 
-const required = (value) =>
-  value || typeof value === 'string' ? undefined : 'Required';
-
 const validate = (formValues) => {
   const errors = {};
 
@@ -204,6 +238,9 @@ const validate = (formValues) => {
   }
   if (!formValues.email) {
     errors.email = 'You must enter an email';
+  }
+  if (!formValues.role) {
+    errors.role = 'You must select a role';
   }
 
   return errors;

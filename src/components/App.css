@@ -55,6 +55,35 @@ button:hover {
   transform: translateY(-50%);
 }
 
+.field.warning label {
+  color: #784908 !important;
+}
+.field.warning input {
+  color: #c9b99c !important;
+  border-color: #c9b99c !important;
+  background: #fffaf3 !important;
+}
+.field.warning span {
+  display: block;
+  padding: 0.15rem 1rem;
+  margin-top: 0.5rem;
+  color: #784908 !important;
+  font-size: 0.85rem;
+  border-radius: 3px;
+  border: 1px solid #c9b99c !important;
+  background: #fffaf3 !important;
+}
+.field.error span {
+  display: block;
+  padding: 0.15rem 1rem;
+  margin-top: 0.5rem;
+  color: #9e3637 !important;
+  font-size: 0.85rem;
+  border-radius: 3px;
+  border: 1px solid #dfb3b4 !important;
+  background: #fff6f6 !important;
+}
+
 .edit-facility-detail-form {
   position: relative !important;
 }
